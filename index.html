@@ -314,7 +314,7 @@ function tasteCategories(){
   // Raggruppamento solo visivo per la pagina "Abbinamenti di gusto":
   // gli strati tecnici restano invariati nel builder e nel ricettario.
   const groups=[
-    {cat:'Verdure e foglie',items:[...(BD.cats['Barriera — verdure resistenti']||[]),...(BD.cats['Verdure morbide']||[]),...(BD.cats['Foglie e germogli']||[])]},
+    {cat:'Verdure',items:[...(BD.cats['Barriera — verdure resistenti']||[]),...(BD.cats['Verdure morbide']||[]),...(BD.cats['Foglie e germogli']||[])]},
     {cat:'Legumi e amidacei',items:BD.cats['Legumi e amidacei']||[]},
     {cat:'Cereali e patate',items:BD.cats['Cereali e patate']||[]},
     {cat:'Frutta',items:BD.cats['Frutta']||[]},
@@ -329,7 +329,7 @@ function tasteCategories(){
 }
 function tasteGuideCategories(){
   const guide={
-    'Verdure e foglie':['Barbabietola','Carote','Cavolfiore','Cavolo cappuccio','Cetrioli a pezzi','Fagiolini','Finocchio','Funghi champignon','Melanzane grigliate','Peperoni','Sedano','Zucca','Zucchine crude a bastoncini','Zucchine crude spiralizzate','Zucchine grigliate','Asparagi (gambi)','Asparagi (punte)','Broccoli cotti','Spinaci cotti','Pomodori','Pomodorini','Radicchio','Rucola','Scarola','Spinaci freschi','Spinacino','Valeriana'],
+    'Verdure':['Barbabietola','Carote','Cavolfiore','Cavolo cappuccio','Cetrioli a pezzi','Fagiolini','Finocchio','Funghi champignon','Melanzane grigliate','Peperoni','Sedano','Zucca','Zucchine crude a bastoncini','Zucchine crude spiralizzate','Zucchine grigliate','Asparagi (gambi)','Asparagi (punte)','Broccoli cotti','Spinaci cotti','Pomodori','Pomodorini','Radicchio','Rucola','Scarola','Spinaci freschi','Spinacino','Valeriana'],
     'Legumi e amidacei':['Ceci','Edamame','Fagioli cannellini','Fagioli di Spagna','Fagioli neri','Fagioli rossi','Lenticchie','Mais','Mix legumi','Piselli'],
     'Cereali e patate':['Bulgur','Cous cous','Farro','Grano saraceno','Orzo','Pasta corta','Pasta integrale','Patate lesse','Quinoa','Riso','Riso integrale','Riso rosso','Riso venere'],
     'Proteine e formaggi':['Bresaola','Fesa di tacchino','Feta','Fiocchi di latte','Gamberetti','Grana padano','Mozzarella light','Parmigiano','Pecorino','Petto di pollo','Polpo','Primo sale','Prosciutto cotto','Ricotta salata','Salmone affumicato','Sgombro','Tofu','Tonno','Uova sode']
