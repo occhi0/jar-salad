@@ -169,10 +169,10 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   <div class="tastegrid">
     <aside class="tastepanel">
       <h2>Laboratorio abbinamenti</h2>
-      <p class="psub">Scegli un ingrediente guida: gli ingredienti sono divisi come nel builder, così è più facile orientarsi tra strati, ruoli e famiglie di gusto. Sono suggerimenti culinari, non regole del metodo a strati.</p>
+      <p class="psub">Scegli un ingrediente guida: qui trovi solo gli ingredienti da cui ha senso partire. Condimenti, erbe e topping restano nel sistema, ma compaiono come suggerimenti negli abbinamenti.</p>
       <input class="search" id="tsearch" placeholder="Cerca ingrediente guida…" autocomplete="off">
       <div id="tmainchips"></div>
-      <div class="methodnote"><b>Nota:</b> il colore segnala un’affinità di gusto. La posizione nel barattolo resta sempre decisa dagli strati. Il comando <b>Cambia ingrediente</b>, accanto all’ingrediente guida, svuota il barattolo per ripartire puliti.</div>
+      <div class="methodnote"><b>Nota:</b> questa lista serve a scegliere il protagonista del barattolo, non a costruirlo liberamente. Per aggiungere olio, limone, erbe, semi o altri elementi di supporto usa i suggerimenti a destra oppure la pagina Crea il tuo barattolo.</div>
     </aside>
     <main class="tasteout" id="tasteout" aria-live="polite"></main>
   </div>
@@ -319,6 +319,16 @@ function tasteCategories(){
   const cond=Object.keys(BD.condimenti);
   if(cond.length)sections.push({cat:'Condimento',items:cond});
   return sections;
+}
+function tasteGuideCategories(){
+  const guide={
+    'Verdure':['Barbabietola','Carote','Cavolfiore','Cavolo cappuccio','Cetrioli a pezzi','Fagiolini','Finocchio','Funghi champignon','Melanzane grigliate','Peperoni','Sedano','Zucca','Zucchine crude a bastoncini','Zucchine crude spiralizzate','Zucchine grigliate','Asparagi (gambi)','Asparagi (punte)','Broccoli cotti','Spinaci cotti','Pomodori','Pomodorini'],
+    'Legumi e amidacei':['Ceci','Edamame','Fagioli cannellini','Fagioli di Spagna','Fagioli neri','Fagioli rossi','Lenticchie','Mais','Mix legumi','Piselli'],
+    'Cereali e patate':['Bulgur','Cous cous','Farro','Grano saraceno','Orzo','Pasta corta','Pasta integrale','Patate lesse','Quinoa','Riso','Riso integrale','Riso rosso','Riso venere'],
+    'Proteine e formaggi':['Bresaola','Fesa di tacchino','Feta','Fiocchi di latte','Gamberetti','Grana padano','Mozzarella light','Parmigiano','Pecorino','Petto di pollo','Polpo','Primo sale','Prosciutto cotto','Ricotta salata','Salmone affumicato','Sgombro','Tofu','Tonno','Uova sode'],
+    'Foglie':['Radicchio','Rucola','Scarola','Spinaci freschi','Spinacino','Valeriana']
+  };
+  return Object.entries(guide).map(([cat,items])=>({cat,items:items.filter(n=>BD.ing[n])})).filter(s=>s.items.length);
 }
 
 // ---------- tabs ----------
@@ -504,28 +514,41 @@ function applyTasteHints(){
     else hint.innerHTML=`Modalità gruppo: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Ben accesi ${friends} ingredienti che completano tutto il gruppo; ${possible} possibili; ${alternatives} alternative dello stesso ruolo. Gli spenti restano cliccabili.`;
   }
 }
+function collapseTasteGuideList(name){
+  const search=document.getElementById('tsearch'),box=document.getElementById('tmainchips');
+  if(!search||!box||!name)return;
+  search.value=name;
+  filterChips(box,name);
+}
+function expandTasteGuideList(){
+  const search=document.getElementById('tsearch'),box=document.getElementById('tmainchips');
+  if(!search||!box)return;
+  search.value='';
+  filterChips(box,'');
+}
 function clearTasteBuilder(){
   picked.clear();pickedCond.clear();currentProfile='Barattolo del giorno';
   bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));
   buildJar();applyTasteHints();renderTaste();
+  expandTasteGuideList();
   const search=document.getElementById('tsearch');if(search)search.focus();
 }
 
 function initTasteLab(){
   const box=document.getElementById('tmainchips');if(!box)return;
   box.innerHTML='';
-  tasteCategories().forEach(({cat,items})=>{
+  tasteGuideCategories().forEach(({cat,items})=>{
     const lab=document.createElement('div');lab.className='catlabel';lab.textContent=cat;box.appendChild(lab);
     const group=document.createElement('div');group.className='chips';group.dataset.cat=cat;
     items.slice().sort((a,b)=>a.localeCompare(b,'it')).forEach(n=>{
       const ch=document.createElement('button');ch.className='chip';ch.dataset.taste=n;ch.dataset.harmony=itemFamilies(n)[0]||'';ch.setAttribute('aria-pressed','false');ch.style.setProperty('--hcol',primaryFamily(n)?.color||'var(--line)');ch.textContent=n;decorateChip(ch,n);
-      ch.onclick=()=>{tasteFocus=n;renderTaste()};
+      ch.onclick=()=>{tasteFocus=n;renderTaste();collapseTasteGuideList(n)};
       group.appendChild(ch);
     });
     box.appendChild(group);
   });
   document.getElementById('tsearch').addEventListener('input',e=>filterChips(document.getElementById('tmainchips'),e.target.value));
-  tasteFocus='Polpo';renderTaste();
+  tasteFocus='Polpo';renderTaste();collapseTasteGuideList(tasteFocus);
 }
 
 function addTasteItemToBuilder(n){
