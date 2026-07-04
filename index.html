@@ -107,7 +107,7 @@ h1 em{font-style:italic;color:var(--accent)}
 @media(max-width:900px){.tastepanel{position:static;max-height:none}}
 .tastepanel h2,.tasteout h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:0 0 4px;font-weight:650}
 .tasteout{background:linear-gradient(180deg,var(--panel2),var(--panel));padding:20px}
-.tastehero{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}.tastehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.tastehero h3{font-family:Georgia,serif;font-size:28px;font-weight:600;margin:3px 0 5px}.tastehero p{margin:0;color:var(--mut);font-size:13px}.tchangebtn{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:9px;padding:7px 10px;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap;margin-top:2px}.tchangebtn:hover{border-color:var(--accent);color:var(--ink)}@media(max-width:560px){.tastehead{display:block}.tchangebtn{margin:6px 0 8px}}
+.tastehero{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}.tastehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.tastehero h3{font-family:Georgia,serif;font-size:28px;font-weight:600;margin:3px 0 5px}.tastehero p{margin:0;color:var(--mut);font-size:13px}.tchangebtn{background:var(--accent);border:1px solid var(--accent);color:#fff;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:750;cursor:pointer;white-space:nowrap;margin-top:2px;box-shadow:0 0 0 3px rgba(240,112,58,.13);transition:.12s}.tchangebtn::before{content:'↺ ';font-weight:800}.tchangebtn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 0 0 4px rgba(240,112,58,.2)}.tchangebtn:active{transform:translateY(0)}@media(max-width:560px){.tastehead{display:block}.tchangebtn{margin:8px 0 10px;width:100%;padding:10px 12px}}
 .legend{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0}.legend span{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg2);border-radius:18px;padding:5px 9px;font-size:12px;color:var(--mut)}.legend i{width:8px;height:8px;border-radius:50%}
 .tastecols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tastecols .full{grid-column:1/-1}
 @media(max-width:720px){.tastecols{grid-template-columns:1fr}}
@@ -514,17 +514,38 @@ function applyTasteHints(){
     else hint.innerHTML=`Modalità gruppo: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Ben accesi ${friends} ingredienti che completano tutto il gruppo; ${possible} possibili; ${alternatives} alternative dello stesso ruolo. Gli spenti restano cliccabili.`;
   }
 }
-function collapseTasteGuideList(name){
-  const search=document.getElementById('tsearch'),box=document.getElementById('tmainchips');
-  if(!search||!box||!name)return;
-  search.value=name;
-  filterChips(box,name);
-}
-function expandTasteGuideList(){
+let tasteGuideCollapsed=false;
+function applyTasteGuideFilter(){
   const search=document.getElementById('tsearch'),box=document.getElementById('tmainchips');
   if(!search||!box)return;
+  const q=search.value.trim().toLowerCase();
+  box.querySelectorAll('.chip[data-taste]').forEach(ch=>{
+    const label=ch.textContent.trim().toLowerCase();
+    const name=(ch.dataset.taste||'').trim().toLowerCase();
+    const guide=(tasteFocus||'').trim().toLowerCase();
+    const keep=tasteGuideCollapsed&&guide ? name===guide : (!q||label.includes(q));
+    ch.classList.toggle('hide',!keep);
+  });
+  box.querySelectorAll('.catlabel').forEach(l=>{
+    const group=l.nextElementSibling;
+    const any=group&&[...group.querySelectorAll('.chip[data-taste]')].some(c=>!c.classList.contains('hide'));
+    l.style.display=any?'':'none';
+    if(group)group.style.display=any?'':'none';
+  });
+}
+function collapseTasteGuideList(name){
+  const search=document.getElementById('tsearch');
+  if(!search||!name)return;
+  tasteGuideCollapsed=true;
+  search.value=name;
+  applyTasteGuideFilter();
+}
+function expandTasteGuideList(){
+  const search=document.getElementById('tsearch');
+  if(!search)return;
+  tasteGuideCollapsed=false;
   search.value='';
-  filterChips(box,'');
+  applyTasteGuideFilter();
 }
 function clearTasteBuilder(){
   picked.clear();pickedCond.clear();currentProfile='Barattolo del giorno';
@@ -547,7 +568,7 @@ function initTasteLab(){
     });
     box.appendChild(group);
   });
-  document.getElementById('tsearch').addEventListener('input',e=>filterChips(document.getElementById('tmainchips'),e.target.value));
+  document.getElementById('tsearch').addEventListener('input',()=>{tasteGuideCollapsed=false;applyTasteGuideFilter()});
   tasteFocus='Polpo';renderTaste();collapseTasteGuideList(tasteFocus);
 }
 
