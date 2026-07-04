@@ -31,9 +31,9 @@ h1 em{font-style:italic;color:var(--accent)}
 .view{display:none}.view.on{display:block}
 
 /* layout */
-.findgrid,.bgrid{display:grid;gap:28px;align-items:start;padding:26px 0 70px}
-.findgrid{grid-template-columns:340px 1fr}.bgrid{grid-template-columns:1fr 390px}
-@media(max-width:900px){.findgrid,.bgrid{grid-template-columns:1fr}}
+.findgrid,.bgrid,.tastegrid{display:grid;gap:28px;align-items:start;padding:26px 0 70px}
+.findgrid{grid-template-columns:340px 1fr}.bgrid{grid-template-columns:1fr 390px}.tastegrid{grid-template-columns:360px 1fr}
+@media(max-width:900px){.findgrid,.bgrid,.tastegrid{grid-template-columns:1fr}}
 .pantry,.bpick{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px}
 .pantry{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
 .bout{position:sticky;top:16px}
@@ -53,6 +53,21 @@ h1 em{font-style:italic;color:var(--accent)}
 .chip:hover{border-color:var(--mut2);color:var(--ink)}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:550}
 .chip.hide{display:none}
+.chip[data-harmony]::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--hcol,var(--line));margin-right:6px;vertical-align:1px;box-shadow:0 0 0 2px rgba(255,255,255,.04)}
+.chip[data-harmony]{box-shadow:inset 0 -2px 0 var(--hcol,var(--line))}
+.chip.on[data-harmony]::before{background:rgba(255,255,255,.92)}
+.chip.friend:not(.on){border-color:var(--hcol,var(--gold));color:var(--ink);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),var(--bg2)}
+.chip.possible:not(.on){border-color:rgba(240,200,90,.55);color:var(--mut);background:linear-gradient(180deg,rgba(240,200,90,.05),rgba(255,255,255,.01)),var(--bg2)}
+.chip.alternative:not(.on){border-color:rgba(240,200,90,.42);border-style:dashed;color:var(--mut2);opacity:.65;background:rgba(240,200,90,.035)}
+.chip.conflict:not(.on){border-color:rgba(239,157,133,.35);opacity:.42}
+.chip.dim:not(.on){opacity:.30}
+.tastecontrols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:-3px 0 8px;align-items:end}
+@media(max-width:560px){.tastecontrols{grid-template-columns:1fr}}
+.tastecheck{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12.5px;cursor:pointer;min-height:38px}.tastecheck input{accent-color:var(--accent)}
+.tastefield label{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 4px;font-weight:650}.tastefield .bsel{margin:0;padding:8px 10px;font-size:12.5px}
+.tastehint{font-size:12px;color:var(--mut2);margin:-2px 0 14px;min-height:18px}.tastehint b{color:var(--gold)}
+.tastepanel #tmainchips .catlabel{margin-top:16px}.tastepanel #tmainchips .catlabel:first-child{margin-top:8px}
+.hdots{display:inline-flex;gap:4px;vertical-align:-1px;margin-right:6px}.hdots i{width:8px;height:8px;border-radius:50%;display:block;box-shadow:0 0 0 2px rgba(255,255,255,.04)}
 .ptools{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .tbtn{flex:1;background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:8px;font-size:12.5px;cursor:pointer}
 .tbtn:hover{color:var(--ink);border-color:var(--mut2)}
@@ -86,6 +101,19 @@ h1 em{font-style:italic;color:var(--accent)}
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(5,9,7,.72);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:24px 16px;z-index:50;overflow:auto}.modal.on{display:flex}.sheet{background:var(--bg2);border:1px solid var(--line);border-radius:18px;max-width:800px;width:100%;overflow:hidden}.sheethead{padding:22px 24px 16px;border-bottom:1px solid var(--line);position:relative}.sheethead .ctag{color:var(--gold)}.sheethead h3{font-family:Georgia,serif;font-size:26px;font-weight:600;margin:4px 0 2px}.smeta{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--mut)}.smeta b{color:var(--ink)}.xbtn{position:absolute;top:16px;right:16px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;line-height:1}.sbody{display:grid;grid-template-columns:160px 1fr}.jarcol{padding:22px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center}.jarcap{font-size:10.5px;color:var(--mut2);margin-top:10px;text-align:center;max-width:130px}.layers{padding:18px 22px 22px}.lrow{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.lrow:last-child{border-bottom:none}.lnum{flex:none;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#0d130f}.lmeta{flex:1}.lname{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:650;margin-bottom:3px}.ling{font-size:14px}.ling .miss{color:var(--gold)}.ling .have{color:var(--ink)}.ling .base{color:var(--mut2)}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;vertical-align:middle}.leftover{margin:2px 22px 20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.leftover h4{margin:0 0 8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}.lochips{display:flex;flex-wrap:wrap;gap:6px}.lochip{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:4px 10px;font-size:12px;color:var(--mut)}.footnote{padding:0 22px 22px;font-size:12px;color:var(--mut2)}
 @media(max-width:620px){.sbody{grid-template-columns:1fr}.jarcol{border-right:none;border-bottom:1px solid var(--line);flex-direction:row;gap:18px;justify-content:center}.bwrap{align-items:flex-start}.trimrow{align-items:flex-start;flex-wrap:wrap}.trimname{min-width:0}}
+/* laboratorio abbinamenti */
+.tastepanel,.tasteout{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px}
+.tastepanel{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+@media(max-width:900px){.tastepanel{position:static;max-height:none}}
+.tastepanel h2,.tasteout h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:0 0 4px;font-weight:650}
+.tasteout{background:linear-gradient(180deg,var(--panel2),var(--panel));padding:20px}
+.tastehero{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}.tastehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.tastehero h3{font-family:Georgia,serif;font-size:28px;font-weight:600;margin:3px 0 5px}.tastehero p{margin:0;color:var(--mut);font-size:13px}.tchangebtn{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:9px;padding:7px 10px;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap;margin-top:2px}.tchangebtn:hover{border-color:var(--accent);color:var(--ink)}@media(max-width:560px){.tastehead{display:block}.tchangebtn{margin:6px 0 8px}}
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0}.legend span{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg2);border-radius:18px;padding:5px 9px;font-size:12px;color:var(--mut)}.legend i{width:8px;height:8px;border-radius:50%}
+.tastecols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tastecols .full{grid-column:1/-1}
+@media(max-width:720px){.tastecols{grid-template-columns:1fr}}
+.tastebox{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px}.tastebox h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}.tastebox p{font-size:12.5px;color:var(--mut);margin:0 0 10px}
+.friendgroups{display:flex;flex-direction:column;gap:12px}.friendsection{display:flex;flex-direction:column;gap:7px}.friendcat{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);font-weight:650;border-bottom:1px solid var(--line);padding:2px 0 4px;margin-top:2px}.friendlist{display:flex;flex-direction:column;gap:7px}.frienditem{display:flex;align-items:center;gap:8px;justify-content:space-between;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02);padding:8px 10px}.frienditem.added{border-color:var(--accent);background:rgba(240,112,58,.10)}.coldlist{display:flex;flex-direction:column;gap:9px}.colditem{border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.025);padding:10px 12px}.coldname{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);font-weight:650}.coldtag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(240,200,90,.35);border-radius:999px;padding:2px 7px}.coldwhy{font-size:12px;color:var(--mut);margin-top:4px}.colduse{font-size:11.5px;color:var(--mut2);margin-top:4px}.friendname{font-size:13px;color:var(--ink)}.friendwhy{font-size:11.5px;color:var(--mut2)}.addtaste{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:7px;padding:4px 8px;font-size:11.5px;cursor:pointer;white-space:nowrap}.addtaste:hover{border-color:var(--accent);color:var(--ink)}.addtaste.added,.addtaste:disabled{border-color:var(--accent);color:#fff;background:var(--accent);cursor:default;opacity:.92}.chip.inbar:not(.guide){box-shadow:inset 0 0 0 1px var(--accent),inset 0 -2px 0 var(--hcol,var(--accent))}
+.scorepill{font-size:10.5px;color:var(--good);background:rgba(95,164,81,.13);border-radius:16px;padding:2px 7px;margin-left:4px}.caution .scorepill{color:var(--gold);background:rgba(240,200,90,.12)}.frienditem.alternative{border-style:dashed;border-color:rgba(240,200,90,.42)}.frienditem.alternative .scorepill{color:var(--gold);background:rgba(240,200,90,.12)}
 footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);font-size:12.5px}
 
 @media print{
@@ -106,10 +134,11 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
 <header>
   <div class="jarmark">Insalate in barattolo · metodo a strati</div>
   <h1>Il tuo <em>barattolo</em>, costruito con criterio</h1>
-  <p class="lede">Crea una combinazione nuova oppure trova una delle 60 ricette usando ciò che hai. L’app distingue l’ordine tecnico degli strati dai suggerimenti di gusto, che restano facoltativi.</p>
+  <p class="lede">Crea una combinazione nuova, esplora gli abbinamenti di gusto oppure consulta il ricettario completo. L’app distingue l’ordine tecnico degli strati dai suggerimenti di gusto, che restano facoltativi.</p>
   <div class="tabs" role="tablist" aria-label="Modalità dell'app">
     <button class="tab on" role="tab" aria-selected="true" data-view="build">Crea il tuo barattolo</button>
-    <button class="tab" role="tab" aria-selected="false" data-view="find">Cerca nelle 60 ricette</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="taste">Abbinamenti di gusto</button>
+    <button class="tab" role="tab" aria-selected="false" data-view="find">Ricettario · 60 ricette</button>
   </div>
 </header>
 
@@ -123,26 +152,44 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
         <div class="field"><label for="jarsize">Formato del barattolo</label><select class="bsel" id="jarsize"><option value="500">500 ml</option><option value="750" selected>750 ml</option><option value="1000">1 litro</option></select></div>
       </div>
       <input class="search" id="bsearch" placeholder="Cerca un ingrediente…" autocomplete="off">
+      <div class="tastecontrols">
+        <label class="tastecheck"><input type="checkbox" id="showTaste" checked> Mostra affinità di gusto nella lista</label>
+        <div class="tastefield"><label for="tasteMode">Guida abbinamenti</label><select class="bsel" id="tasteMode"><option value="group" selected>Coerente con il gruppo</option><option value="free">Libera</option></select></div>
+      </div>
+      <div class="tastehint" id="tastehint">I pallini colorati indicano famiglie di gusto, non regole fisse.</div>
       <div id="bcats"></div>
       <div class="ptools"><button class="tbtn" id="bclear">Svuota</button><button class="tbtn" id="brandom">Sorprendimi con criterio</button></div>
-      <div class="methodnote"><b>Metodo:</b> bagnato in basso, asciutto in alto. Gli adattamenti per “domani” o “tra due giorni” sono suggerimenti tecnici, non modifiche al ricettario originale.</div>
+      <div class="methodnote"><b>Metodo:</b> bagnato in basso, asciutto in alto. La guida di gusto in modalità gruppo illumina solo gli ingredienti coerenti con l’insieme già scelto; non blocca comunque le scelte creative.</div>
     </section>
     <aside class="bout" id="bout" aria-live="polite"></aside>
+  </div>
+</section>
+
+<section class="view" id="view-taste" role="tabpanel">
+  <div class="tastegrid">
+    <aside class="tastepanel">
+      <h2>Laboratorio abbinamenti</h2>
+      <p class="psub">Scegli un ingrediente guida: gli ingredienti sono divisi come nel builder, così è più facile orientarsi tra strati, ruoli e famiglie di gusto. Sono suggerimenti culinari, non regole del metodo a strati.</p>
+      <input class="search" id="tsearch" placeholder="Cerca ingrediente guida…" autocomplete="off">
+      <div id="tmainchips"></div>
+      <div class="methodnote"><b>Nota:</b> il colore segnala un’affinità di gusto. La posizione nel barattolo resta sempre decisa dagli strati. Il comando <b>Cambia ingrediente</b>, accanto all’ingrediente guida, svuota il barattolo per ripartire puliti.</div>
+    </aside>
+    <main class="tasteout" id="tasteout" aria-live="polite"></main>
   </div>
 </section>
 
 <section class="view" id="view-find" role="tabpanel">
   <div class="findgrid">
     <aside class="pantry">
-      <h2>La tua dispensa</h2>
-      <p class="psub">Seleziona ciò che hai: le ricette saranno ordinate per fattibilità.</p>
+      <h2>Ricettario · 60 ricette</h2>
+      <p class="psub">Seleziona ciò che hai in dispensa: le ricette saranno ordinate per fattibilità.</p>
       <input class="search" id="search" placeholder="Cerca nella dispensa…" autocomplete="off">
       <div id="cats"></div>
       <div class="ptools"><button class="tbtn" id="clear">Svuota</button><button class="tbtn" id="sample">Esempio</button></div>
       <div class="count" id="count"></div>
     </aside>
     <main>
-      <div class="rhead"><h2 id="rtitle">Le 60 ricette</h2><div class="filters" id="filters"></div></div>
+      <div class="rhead"><h2 id="rtitle">Ricettario · 60 ricette</h2><div class="filters" id="filters"></div></div>
       <div id="trim"></div>
       <div id="results"></div>
     </main>
@@ -170,11 +217,115 @@ function keyOf(n){return NORM[n]||n}
 function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function setPressed(el,on){el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on))}
 
+// ---------- famiglie di gusto / abbinamenti ----------
+const HARMONY={
+  med:{label:'Mediterraneo',color:'#5fa451'},
+  gre:{label:'Greco fresco',color:'#47b7a8'},
+  nor:{label:'Nordico fresco',color:'#72aee6'},
+  ori:{label:'Orientale',color:'#d9a63a'},
+  ter:{label:'Terroso dolce',color:'#c77b54'},
+  sap:{label:'Sapido deciso',color:'#dc6a57'},
+  agr:{label:'Agrumato / agrodolce',color:'#d7c957'},
+  eso:{label:'Esotico fresco',color:'#9fbf56'}
+};
+const TASTE={
+  'Olio EVO':['med'],'Aceto balsamico':['ter','agr'],'Aceto di mele':['agr'],'Succo di limone':['med','gre','nor','agr'],'Succo di lime':['ori','eso','agr'],'Yogurt greco 0%':['gre','nor'],'Senape':['sap','agr'],'Pesto genovese':['med'],'Salsa di soia':['ori'],'Tahina':['ter','ori'],'Sale':['sap'],'Pepe nero':['sap'],'Basilico tritato':['med'],'Menta tritata':['gre','eso'],'Prezzemolo tritato':['med'],'Aneto tritato':['nor'],'Coriandolo tritato':['ori','eso'],'Erba cipollina tritata':['nor','sap'],
+  'Carote':['ter','ori','sap'],'Cetrioli a pezzi':['gre','nor','eso'],'Peperoni':['med','sap'],'Ravanelli':['sap','eso'],'Finocchio':['agr','med'],'Sedano':['med','sap'],'Cavolo cappuccio':['ori','sap'],'Cavolfiore':['ter','ori'],'Zucca':['ter'],'Barbabietola':['ter','agr'],'Funghi champignon':['ter','sap'],'Fagiolini':['med'],'Asparagi (gambi)':['med','agr'],'Cipolla rossa':['sap','med'],'Cipollotto':['sap','ori'],'Broccoli crudi':['ori','ter'],'Zucchine crude a bastoncini':['med','gre'],'Melanzane grigliate':['med','ter'],'Carciofini':['med','sap'],
+  'Ceci':['med','gre','ter'],'Fagioli cannellini':['med','sap'],'Fagioli rossi':['sap','ori'],'Fagioli neri':['sap','ori'],'Fagioli di Spagna':['med','sap'],'Lenticchie':['ter','agr'],'Piselli':['med','agr'],'Mix legumi':['med','sap'],'Edamame':['ori'],'Mais':['sap','ori'],
+  'Riso':['ori','med'],'Riso integrale':['ori','ter'],'Riso rosso':['ter','sap'],'Riso venere':['ori','eso'],'Farro':['med','ter'],'Orzo':['med','agr'],'Quinoa':['ter','eso'],'Cous cous':['med','ori'],'Bulgur':['med','gre'],'Grano saraceno':['ter'],'Pasta corta':['med'],'Pasta integrale':['med','ter'],'Patate lesse':['med','ter'],
+  'Pomodorini':['med'],'Pomodori':['med'],'Pomodori secchi':['med','sap'],'Pomodorini secchi':['med','sap'],'Zucchine grigliate':['med','gre'],'Broccoli cotti':['ter','ori'],'Spinaci cotti':['ter'],'Olive':['med','gre','sap'],'Capperi':['med','sap'],'Cetriolini sottaceto':['sap','agr'],
+  'Mela':['ter','agr'],'Pera':['ter','agr'],'Arancia':['agr'],'Mango':['eso','ori'],'Uva bianca':['agr'],'Melograno':['agr','ter'],'Fragole':['agr'],'Pesche':['eso','agr'],'Uvetta':['ter','agr'],'Avocado':['nor','eso'],
+  'Petto di pollo':['ori','agr','sap'],'Fesa di tacchino':['agr','sap'],'Bresaola':['sap','med'],'Prosciutto cotto':['sap'],'Sgombro':['med','agr','sap'],'Tonno':['med','sap'],'Salmone affumicato':['nor','sap'],'Gamberetti':['eso','ori','med'],'Polpo':['med','agr','sap'],'Uova sode':['sap','med'],'Tofu':['ori'],'Mozzarella light':['med'],'Feta':['gre','ter','sap'],'Grana padano':['sap','med'],'Parmigiano':['sap','med'],'Pecorino':['sap','ter'],'Primo sale':['med','agr'],'Fiocchi di latte':['agr','gre'],'Ricotta salata':['sap','med'],
+  'Rucola':['sap','med'],'Valeriana':['agr','nor'],'Lattuga':['gre','nor','eso'],'Spinacino':['nor','ter'],'Spinaci freschi':['ter','nor'],'Radicchio':['sap','agr'],'Scarola':['sap','med'],'Misticanza':['med','agr'],'Insalata mista':['med','agr'],'Germogli di soia':['ori'],
+  'Noci':['ter','agr'],'Mandorle':['ori','ter'],'Pinoli':['med'],'Semi di girasole':['ter'],'Semi di sesamo':['ori'],'Semi di zucca':['ter'],'Crostini':['med'],'Granola salata':['ter'],
+  'Basilico':['med'],'Menta':['gre','eso'],'Prezzemolo':['med'],'Aneto':['nor'],'Coriandolo':['ori','eso'],'Erba cipollina':['nor','sap'],'Zucchine crude spiralizzate':['gre','med'],'Asparagi (punte)':['med','agr']
+};
+const PAIRINGS={
+  'Polpo':['Patate lesse','Prezzemolo tritato','Prezzemolo','Succo di limone','Olio EVO','Olive','Capperi','Sedano','Carote','Rucola','Pomodori secchi','Fagiolini'],
+  'Patate lesse':['Polpo','Fagiolini','Uova sode','Pesto genovese','Prezzemolo','Prezzemolo tritato','Tonno','Rucola'],
+  'Cetrioli a pezzi':['Feta','Yogurt greco 0%','Menta','Menta tritata','Salmone affumicato','Aneto','Aneto tritato','Ceci','Lattuga','Succo di limone'],
+  'Feta':['Cetrioli a pezzi','Pomodorini','Olive','Ceci','Menta','Menta tritata','Barbabietola','Zucca','Noci','Succo di limone'],
+  'Salmone affumicato':['Cetrioli a pezzi','Yogurt greco 0%','Aneto','Aneto tritato','Avocado','Spinacino','Succo di limone'],
+  'Tonno':['Fagioli cannellini','Fagioli di Spagna','Pomodorini','Olive','Capperi','Mais','Lattuga','Succo di limone'],
+  'Uova sode':['Fagiolini','Pomodorini','Carote','Rucola','Senape','Aceto di mele','Lattuga'],
+  'Tofu':['Edamame','Cavolo cappuccio','Carote','Semi di sesamo','Salsa di soia','Succo di lime','Riso','Germogli di soia'],
+  'Gamberetti':['Mango','Cetrioli a pezzi','Ravanelli','Lattuga','Succo di lime','Coriandolo','Coriandolo tritato','Riso venere'],
+  'Barbabietola':['Feta','Mela','Noci','Spinacino','Aceto balsamico','Semi di zucca'],
+  'Pera':['Pecorino','Parmigiano','Noci','Rucola','Radicchio','Aceto balsamico'],
+  'Mela':['Sedano','Noci','Lattuga','Petto di pollo','Yogurt greco 0%','Aceto di mele'],
+  'Ceci':['Peperoni','Pomodorini','Feta','Cetrioli a pezzi','Cipolla rossa','Succo di limone','Prezzemolo'],
+  'Rucola':['Bresaola','Parmigiano','Grana padano','Polpo','Patate lesse','Pomodorini','Pera','Noci']
+};
+const CAUTIONS={
+  'Polpo':['Yogurt greco 0%','Feta','Mango','Fragole','Uvetta'],
+  'Salmone affumicato':['Aceto balsamico','Pecorino','Pomodori secchi'],
+  'Feta':['Salsa di soia','Salmone affumicato','Bresaola'],
+  'Yogurt greco 0%':['Olive','Capperi','Pomodori secchi'],
+  'Mango':['Pecorino','Parmigiano','Bresaola']
+};
+let tasteFocus=null;
+function itemFamilies(name){return TASTE[name]||[]}
+function primaryFamily(name){const f=itemFamilies(name)[0];return f?HARMONY[f]:null}
+function familyLabels(fams){return fams.map(f=>HARMONY[f]?.label).filter(Boolean)}
+function decorateChip(ch,name){const h=primaryFamily(name);if(!h)return;ch.dataset.harmony=itemFamilies(name)[0];ch.style.setProperty('--hcol',h.color);ch.title='Affinità: '+familyLabels(itemFamilies(name)).join(', ')}
+function hdots(name){return itemFamilies(name).map(f=>`<span class="hdots"><i style="background:${HARMONY[f].color}" title="${esc(HARMONY[f].label)}"></i></span>`).join('')}
+function sharedFamilies(a,b){const A=new Set(itemFamilies(a));return itemFamilies(b).filter(x=>A.has(x))}
+function directPair(a,b){return (PAIRINGS[a]||[]).includes(b)||(PAIRINGS[b]||[]).includes(a)}
+function tasteScore(a,b){return sharedFamilies(a,b).length*2+(directPair(a,b)?3:0)}
+function tasteConflict(a,b){return (CAUTIONS[a]||[]).includes(b)||(CAUTIONS[b]||[]).includes(a)}
+function roleOf(name){
+  if(BD.condimenti[name])return 'condimento';
+  const info=BD.ing[name];if(!info)return 'altro';
+  if(info.l===5)return 'proteina o formaggio';
+  if(info.l===3)return info.cat==='Cereali e patate'?'cereale o patata':'legume o amidaceo';
+  if(info.l===7)return 'topping croccante';
+  if(info.l===6){const herbs=new Set(['Basilico','Menta','Prezzemolo','Aneto','Coriandolo','Erba cipollina']);return herbs.has(name)?'erba fresca':'foglia o germoglio'}
+  if(info.l===4){if(info.cat==='Frutta')return 'frutta';if(info.salty)return 'elemento sapido';return 'delicato'}
+  return info.cat||'altro';
+}
+function sameFunctionalRole(a,b){
+  const A=BD.ing[a],B=BD.ing[b];if(!A||!B)return false;
+  const ra=roleOf(a),rb=roleOf(b);
+  if(ra!==rb)return false;
+  return ['proteina o formaggio','cereale o patata','legume o amidaceo','topping croccante','foglia o germoglio','elemento sapido','frutta'].includes(ra);
+}
+const SOFT_TASTE_ANCHORS=new Set(['Olio EVO','Sale','Pepe nero']);
+function groupTasteResult(candidate,selected){
+  const anchors=selected.filter(s=>s!==candidate&&itemFamilies(s).length);
+  const meaningful=anchors.filter(s=>!SOFT_TASTE_ANCHORS.has(s));
+  const ref=meaningful.length?meaningful:anchors;
+  if(!ref.length)return{level:'neutral',score:0,compatible:0,total:0};
+  let score=0,compatible=0,conflict=false,roleMate=null;
+  ref.forEach(s=>{
+    if(sameFunctionalRole(candidate,s))roleMate=s;
+    if(tasteConflict(s,candidate)){conflict=true;score-=3;return}
+    const sc=tasteScore(s,candidate);
+    if(sc>0){compatible++;score+=sc}
+  });
+  const ratio=compatible/ref.length;
+  if(conflict)return{level:'conflict',score,compatible,total:ref.length};
+  if(roleMate&&score>0)return{level:'alternative',score,compatible,total:ref.length,roleMate};
+  if(compatible===ref.length)return{level:'friend',score,compatible,total:ref.length};
+  if(ratio>=0.6&&score>=3)return{level:'possible',score,compatible,total:ref.length};
+  return{level:'dim',score,compatible,total:ref.length};
+}
+function allTasteItems(){return [...new Set([...Object.values(BD.cats).flat(),...Object.keys(BD.condimenti)])]}
+function tasteCategories(){
+  const sections=[];
+  Object.entries(BD.cats).forEach(([cat,items])=>{
+    const list=items.filter(n=>BD.ing[n]);
+    if(list.length)sections.push({cat,items:list});
+  });
+  const cond=Object.keys(BD.condimenti);
+  if(cond.length)sections.push({cat:'Condimento',items:cond});
+  return sections;
+}
+
 // ---------- tabs ----------
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('on');x.setAttribute('aria-selected','false')});
   t.classList.add('on');t.setAttribute('aria-selected','true');
-  const v=t.dataset.view;document.getElementById('view-find').classList.toggle('on',v==='find');document.getElementById('view-build').classList.toggle('on',v==='build');
+  const v=t.dataset.view;document.querySelectorAll('.view').forEach(view=>view.classList.toggle('on',view.id===`view-${v}`));if(v==='taste'&&typeof renderTaste==='function')renderTaste();
 }));
 
 // ============ RICETTARIO / DISPENSA ============
@@ -238,12 +389,12 @@ document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeDetai
 // ============ BUILDER ============
 const picked=new Set(),pickedCond=new Set();let currentProfile='Barattolo del giorno';
 const bcats=document.getElementById('bcats');
-Object.entries(BD.cats).forEach(([cat,items])=>{if(!items.length)return;const lab=document.createElement('div');lab.className='catlabel';lab.textContent=cat;bcats.appendChild(lab);const box=document.createElement('div');box.className='chips';items.forEach(it=>{const c=document.createElement('button');c.className='chip';c.textContent=it;c.dataset.k=it;c.setAttribute('aria-pressed','false');c.onclick=()=>{picked.has(it)?picked.delete(it):picked.add(it);setPressed(c,picked.has(it));currentProfile='Barattolo del giorno';buildJar()};box.appendChild(c)});bcats.appendChild(box)});
+Object.entries(BD.cats).forEach(([cat,items])=>{if(!items.length)return;const lab=document.createElement('div');lab.className='catlabel';lab.textContent=cat;bcats.appendChild(lab);const box=document.createElement('div');box.className='chips';items.forEach(it=>{const c=document.createElement('button');c.className='chip';c.textContent=it;c.dataset.k=it;decorateChip(c,it);c.setAttribute('aria-pressed','false');c.onclick=()=>{picked.has(it)?picked.delete(it):picked.add(it);setPressed(c,picked.has(it));currentProfile='Barattolo del giorno';buildJar();applyTasteHints()};box.appendChild(c)});bcats.appendChild(box)});
 {
-  const lab=document.createElement('div');lab.className='catlabel';lab.textContent='Condimento (facoltativo)';bcats.appendChild(lab);const box=document.createElement('div');box.className='chips';Object.keys(BD.condimenti).forEach(it=>{const c=document.createElement('button');c.className='chip';c.textContent=it;c.dataset.k=it;c.setAttribute('aria-pressed','false');c.onclick=()=>{pickedCond.has(it)?pickedCond.delete(it):pickedCond.add(it);setPressed(c,pickedCond.has(it));buildJar()};box.appendChild(c)});bcats.appendChild(box)
+  const lab=document.createElement('div');lab.className='catlabel';lab.textContent='Condimento';bcats.appendChild(lab);const box=document.createElement('div');box.className='chips';Object.keys(BD.condimenti).forEach(it=>{const c=document.createElement('button');c.className='chip';c.textContent=it;c.dataset.k=it;decorateChip(c,it);c.setAttribute('aria-pressed','false');c.onclick=()=>{pickedCond.has(it)?pickedCond.delete(it):pickedCond.add(it);setPressed(c,pickedCond.has(it));buildJar();applyTasteHints()};box.appendChild(c)});bcats.appendChild(box)
 }
-document.getElementById('bsearch').addEventListener('input',e=>filterChips(bcats,e.target.value));document.getElementById('eatwhen').onchange=buildJar;document.getElementById('jarsize').onchange=buildJar;
-document.getElementById('bclear').onclick=()=>{picked.clear();pickedCond.clear();currentProfile='Barattolo del giorno';bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));buildJar()};
+document.getElementById('bsearch').addEventListener('input',e=>filterChips(bcats,e.target.value));document.getElementById('showTaste').onchange=applyTasteHints;document.getElementById('tasteMode').onchange=applyTasteHints;document.getElementById('eatwhen').onchange=buildJar;document.getElementById('jarsize').onchange=buildJar;
+document.getElementById('bclear').onclick=()=>{picked.clear();pickedCond.clear();currentProfile='Barattolo del giorno';bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));buildJar();applyTasteHints()};
 
 const PROFILES=[
  {name:'Greco fresco',solid:['Cetrioli a pezzi','Ceci','Pomodorini','Feta','Lattuga','Menta','Noci'],cond:['Yogurt greco 0%','Succo di limone','Olio EVO']},
@@ -252,7 +403,7 @@ const PROFILES=[
  {name:'Pollo e mela',solid:['Sedano','Mela','Petto di pollo','Lattuga','Noci','Erba cipollina'],cond:['Yogurt greco 0%','Aceto di mele','Pepe nero']},
  {name:'Barbabietola e feta',solid:['Barbabietola','Feta','Mela','Spinacino','Noci'],cond:['Aceto balsamico','Olio EVO','Pepe nero']}
 ];
-document.getElementById('brandom').onclick=()=>{const p=PROFILES[Math.floor(Math.random()*PROFILES.length)];picked.clear();pickedCond.clear();bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));p.solid.filter(n=>BD.ing[n]).forEach(n=>picked.add(n));p.cond.filter(n=>BD.condimenti[n]).forEach(n=>pickedCond.add(n));[...picked,...pickedCond].forEach(n=>{const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,true)});currentProfile=p.name;buildJar()};
+document.getElementById('brandom').onclick=()=>{const p=PROFILES[Math.floor(Math.random()*PROFILES.length)];picked.clear();pickedCond.clear();bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));p.solid.filter(n=>BD.ing[n]).forEach(n=>picked.add(n));p.cond.filter(n=>BD.condimenti[n]).forEach(n=>pickedCond.add(n));[...picked,...pickedCond].forEach(n=>{const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,true)});currentProfile=p.name;buildJar();applyTasteHints()};
 
 function has(n){return picked.has(n)}
 function defaultCondiment(){
@@ -312,14 +463,142 @@ function buildJar(){
   const simHtml=sims.length?`<div class="similar"><h4>Somiglia a queste del ricettario</h4>${sims.map(({r,shared})=>`<div class="simrow" data-id="${r.id}">${esc(r.nome)} <span style="color:var(--mut2)">— ${shared} ingredienti in comune</span></div>`).join('')}</div>`:'';
   const whenLabel={today:'oggi',tomorrow:'domani',twodays:'tra due giorni'}[when];
   out.innerHTML=`<div class="bcard"><div class="bcardhead"><div class="ctag">Il tuo barattolo</div><h3>${esc(currentProfile)}</h3><div class="bstats"><span><b>${picked.size}</b> ingredienti solidi</span><span><b>${groups.length}</b> passaggi</span><span><b>${size} ml</b></span><span>da mangiare <b>${whenLabel}</b></span></div></div><div class="bwrap"><div class="bjar"><div class="jarlid"></div><div class="jar">${jar}</div></div><div class="blayers">${rows}</div></div>${adaptedOrder?'<div class="balert info"><strong>Ordine adattato per la conservazione:</strong> il numero nel riquadro indica lo strato del metodo; la posizione nella lista indica il passaggio di montaggio. Per esempio, 1 → 3 → 2 significa condimento, ceci o cereali, poi cetriolo.</div>':''}${alerts.map(a=>`<div class="balert ${a.kind==='info'?'info':''}">⚠ ${a.txt}</div>`).join('')}${balance}${simHtml}<div class="bactions"><button class="baction" id="bcopy">Copia la ricetta</button><button class="baction ghost" id="bprint">Stampa</button></div></div>`;
-  out.querySelectorAll('[data-rmbuild]').forEach(b=>b.onclick=()=>{const n=b.dataset.rmbuild;picked.delete(n);const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,false);currentProfile='Barattolo del giorno';buildJar()});
+  out.querySelectorAll('[data-rmbuild]').forEach(b=>b.onclick=()=>{const n=b.dataset.rmbuild;picked.delete(n);const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,false);currentProfile='Barattolo del giorno';buildJar();applyTasteHints()});
   out.querySelectorAll('.simrow').forEach(el=>el.onclick=()=>{const r=DATA.ricette.find(x=>x.id==el.dataset.id);openDetail(r,builderAvailable(),'builder')});
   document.getElementById('bcopy').onclick=async()=>{let txt='IL MIO BARATTOLO (metodo a strati)\n\n';groups.forEach((g,i)=>{txt+=`Passaggio ${i+1} · Strato ${g.l} — ${LAYER[g.l].short}: `+g.items.map(x=>x.n+(x.q&&x.q!=='q.b.'?` (${x.q})`:'')).join(', ')+(g.adapted?' [ordine adattato per preparazione anticipata]':'')+'\n'});txt+=`\nBarattolo: ${size} ml. Da mangiare ${whenLabel}.\nMonta seguendo l’ordine dei passaggi. Con condimenti densi è preferibile rovesciare in una ciotola e mescolare.`;const ok=await copyText(txt);const b=document.getElementById('bcopy');b.textContent=ok?'Copiato!':'Seleziona e copia';setTimeout(()=>b.textContent='Copia la ricetta',1700)};
   document.getElementById('bprint').onclick=()=>{document.body.classList.add('print-builder');window.print();setTimeout(()=>document.body.classList.remove('print-builder'),300)};
 }
 async function copyText(txt){try{await navigator.clipboard.writeText(txt);return true}catch(e){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch{}ta.remove();return ok}}
 
-buildJar();renderFind();
+
+function applyTasteHints(){
+  if(!bcats)return;
+  const enabled=document.getElementById('showTaste')?.checked;
+  const mode=document.getElementById('tasteMode')?.value||'group';
+  const chips=[...bcats.querySelectorAll('.chip')];
+  chips.forEach(ch=>ch.classList.remove('friend','possible','alternative','dim','conflict'));
+  const hint=document.getElementById('tastehint');
+  if(!enabled){if(hint)hint.textContent='Affinità di gusto nascoste. Gli strati restano invariati.';return}
+  const selected=[...picked,...pickedCond];
+  if(!selected.length){if(hint)hint.textContent='I pallini colorati indicano famiglie di gusto, non regole fisse.';return}
+  const selFamilies=[...new Set(selected.flatMap(itemFamilies))];let friends=0,possible=0,alternatives=0,conflicts=0;
+  chips.forEach(ch=>{
+    const n=ch.dataset.k;if(selected.includes(n))return;
+    if(!itemFamilies(n).length)return;
+    if(mode==='free'){
+      const score=selected.reduce((m,s)=>Math.max(m,tasteScore(s,n)),0);
+      const shares=itemFamilies(n).some(f=>selFamilies.includes(f));
+      if(score>=2||shares){ch.classList.add('friend');friends++}else{ch.classList.add('dim')}
+      return;
+    }
+    const res=groupTasteResult(n,selected);
+    if(res.level==='friend'){ch.classList.add('friend');friends++}
+    else if(res.level==='possible'){ch.classList.add('possible');possible++}
+    else if(res.level==='alternative'){ch.classList.add('alternative');alternatives++}
+    else if(res.level==='conflict'){ch.classList.add('conflict');conflicts++}
+    else{ch.classList.add('dim')}
+  });
+  const labels=familyLabels(selFamilies).slice(0,3).join(', ');
+  if(hint){
+    if(mode==='free')hint.innerHTML=`Modalità libera: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Si illuminano gli ingredienti compatibili con almeno una scelta. Suggerimento, non regola.`;
+    else hint.innerHTML=`Modalità gruppo: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Ben accesi ${friends} ingredienti che completano tutto il gruppo; ${possible} possibili; ${alternatives} alternative dello stesso ruolo. Gli spenti restano cliccabili.`;
+  }
+}
+function clearTasteBuilder(){
+  picked.clear();pickedCond.clear();currentProfile='Barattolo del giorno';
+  bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));
+  buildJar();applyTasteHints();renderTaste();
+  const search=document.getElementById('tsearch');if(search)search.focus();
+}
+
+function initTasteLab(){
+  const box=document.getElementById('tmainchips');if(!box)return;
+  box.innerHTML='';
+  tasteCategories().forEach(({cat,items})=>{
+    const lab=document.createElement('div');lab.className='catlabel';lab.textContent=cat;box.appendChild(lab);
+    const group=document.createElement('div');group.className='chips';group.dataset.cat=cat;
+    items.slice().sort((a,b)=>a.localeCompare(b,'it')).forEach(n=>{
+      const ch=document.createElement('button');ch.className='chip';ch.dataset.taste=n;ch.dataset.harmony=itemFamilies(n)[0]||'';ch.setAttribute('aria-pressed','false');ch.style.setProperty('--hcol',primaryFamily(n)?.color||'var(--line)');ch.textContent=n;decorateChip(ch,n);
+      ch.onclick=()=>{tasteFocus=n;renderTaste()};
+      group.appendChild(ch);
+    });
+    box.appendChild(group);
+  });
+  document.getElementById('tsearch').addEventListener('input',e=>filterChips(document.getElementById('tmainchips'),e.target.value));
+  tasteFocus='Polpo';renderTaste();
+}
+
+function addTasteItemToBuilder(n){
+  if(!n)return false;
+  let added=false;
+  if(BD.ing[n]){
+    if(!picked.has(n)){picked.add(n);added=true}
+  }else if(BD.condimenti[n]){
+    if(!pickedCond.has(n)){pickedCond.add(n);added=true}
+  }else{
+    return false;
+  }
+  const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);
+  if(chip)setPressed(chip,true);
+  return added;
+}
+
+
+function isInBuilder(n){return picked.has(n)||pickedCond.has(n)}
+function updateTasteLabSelection(){
+  const box=document.getElementById('tmainchips');if(!box)return;
+  box.querySelectorAll('.chip[data-taste]').forEach(ch=>{
+    const n=ch.dataset.taste;
+    const inBar=isInBuilder(n),isGuide=n===tasteFocus;
+    setPressed(ch,inBar||isGuide);
+    ch.classList.toggle('inbar',inBar);
+    ch.classList.toggle('guide',isGuide);
+    ch.setAttribute('aria-label',`${n}${isGuide?' — ingrediente guida':''}${inBar?' — nel barattolo':''}`);
+  });
+}
+
+function friendRow(name,focus,score,opts={}){
+  const caution=!!opts.caution,alternative=!!opts.alternative,inBuilder=isInBuilder(name);
+  const shared=sharedFamilies(focus,name).map(f=>HARMONY[f].label);
+  const baseWhy=directPair(focus,name)?'abbinamento specifico':(shared.length?`famiglia: ${shared.join(', ')}`:'contrasto da dosare');
+  const pill=alternative?'alternativa':(inBuilder?'nel barattolo':(caution?'attenzione':score>=4?'molto bene':'bene'));
+  const addable=!alternative&&(BD.ing[name]||BD.condimenti[name]);
+  const btn=addable?`<button class="addtaste ${inBuilder?'added':''}" ${inBuilder?'disabled aria-pressed="true"':`data-add="${esc(name)}"`}>${inBuilder?'aggiunto':'aggiungi'}</button>`:'';
+  const whyHtml=alternative?'':`<div class="friendwhy">${esc(baseWhy)}</div>`;
+  return `<div class="frienditem ${caution?'caution':''} ${alternative?'alternative':''} ${inBuilder?'added':''}"><div><div class="friendname">${hdots(name)}${esc(name)} <span class="scorepill">${pill}</span></div>${whyHtml}</div>${btn}</div>`
+}
+
+function groupedFriendList(items,focus,emptyText,opts={}){
+  if(!items.length)return `<p>${esc(emptyText)}</p>`;
+  const byName=new Map(items.map(x=>[x.n,x]));
+  const sections=tasteCategories().map(({cat,items})=>{
+    const rows=items.filter(n=>byName.has(n)).map(n=>friendRow(n,focus,byName.get(n).score,opts)).join('');
+    return rows?`<div class="friendsection"><div class="friendcat">${esc(cat)}</div><div class="friendlist">${rows}</div></div>`:'';
+  }).filter(Boolean).join('');
+  return sections?`<div class="friendgroups">${sections}</div>`:`<p>${esc(emptyText)}</p>`;
+}
+
+const COLD_NOT_IDEAL=[
+  {name:'Ghee',tag:'fuori barattolo',why:'Non consigliato dentro il barattolo freddo: in frigo tende a solidificare e può risultare ceroso o distribuirsi male.',use:'Può funzionare fuori barattolo, sciolto al momento, con ceci, lenticchie, riso, cavolfiore, carote o pollo al curry.'},
+  {name:'Crostini molto friabili',tag:'separare',why:'Nel barattolo assorbono umidità e perdono croccantezza, soprattutto se prepari per domani o tra due giorni.',use:'Portali in un piccolo contenitore separato e aggiungili al momento.'},
+  {name:'Frutta molto matura',tag:'attenzione',why:'Può rilasciare acqua, diventare molle e rovinare le foglie.',use:'Usa frutta soda, ben asciutta, oppure aggiungila poco prima di mangiare.'},
+  {name:'Salse dense non diluite',tag:'attenzione',why:'Tahina, pesto o yogurt troppo compatti possono restare sul fondo e non distribuirsi bene.',use:'Diluiscile con poca acqua, limone o aceto prima di chiudere il barattolo.'}
+];
+function coldNotIdealBox(){
+  return `<div class="tastebox full cold"><h4>Non ideali nel barattolo freddo</h4><p>Non sono divieti: sono ingredienti o situazioni che rendono peggio nella conservazione a freddo. Meglio usarli fuori barattolo, separarli o dosarli con attenzione.</p><div class="coldlist">${COLD_NOT_IDEAL.map(x=>`<div class="colditem"><div class="coldname">${esc(x.name)} <span class="coldtag">${esc(x.tag)}</span></div><div class="coldwhy">${esc(x.why)}</div><div class="colduse">${esc(x.use)}</div></div>`).join('')}</div></div>`;
+}
+function renderTaste(){
+  updateTasteLabSelection();
+  const out=document.getElementById('tasteout');if(!out)return;if(!tasteFocus){out.innerHTML='<div class="bempty"><b>Scegli un ingrediente guida.</b><br>Vedrai gli ingredienti compatibili per colore e famiglia.</div>';return}
+  const fams=itemFamilies(tasteFocus);const ranked=allTasteItems().filter(n=>n!==tasteFocus).map(n=>({n,score:tasteScore(tasteFocus,n)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.n.localeCompare(b.n,'it'));
+  const complementary=ranked.filter(x=>!sameFunctionalRole(tasteFocus,x.n));
+  const alternatives=ranked.filter(x=>sameFunctionalRole(tasteFocus,x.n)).slice(0,8);
+  const strong=complementary.filter(x=>x.score>=4).slice(0,10),medium=complementary.filter(x=>x.score>0&&x.score<4).slice(0,10);const caut=(CAUTIONS[tasteFocus]||[]).filter(n=>BD.ing[n]||BD.condimenti[n]);
+  out.innerHTML=`<div class="tastehero"><div class="tastehead"><div><div class="ctag">Ingrediente guida</div><h3>${hdots(tasteFocus)}${esc(tasteFocus)}</h3></div><button class="tchangebtn" id="tchangeingredient" type="button" title="Svuota il barattolo e riparti con un altro ingrediente guida">Cambia ingrediente</button></div><p>I colori indicano affinità di gusto. Quando aggiungi un abbinamento, nel barattolo viene inserito anche l’ingrediente guida. Gli elementi già aggiunti restano selezionati. Le proposte sono raggruppate per ruolo, come nella scelta ingredienti.</p><div class="legend">${fams.map(f=>`<span><i style="background:${HARMONY[f].color}"></i>${esc(HARMONY[f].label)}</span>`).join('')||'<span>Nessuna famiglia definita</span>'}</div></div><div class="tastecols"><div class="tastebox"><h4>Sta molto bene con</h4>${groupedFriendList(strong,tasteFocus,'Nessun abbinamento forte definito.')}</div><div class="tastebox"><h4>Sta bene / può completare</h4>${groupedFriendList(medium,tasteFocus,'Nessun abbinamento medio definito.')}</div>${alternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ruolo</h4><p>Ruolo considerato: <strong>${esc(roleOf(tasteFocus))}</strong>. Non sono suggerite come aggiunta automatica: servono più come sostituzioni, così il barattolo non diventa “tutto proteine”, “tutto cereali” o “tutto topping”. Scegline una, oppure usale in piccola quantità solo con un’idea precisa.</p><div class="friendlist">${alternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true})).join('')}</div></div>`:''}${caut.length?`<div class="tastebox full caution"><h4>Da usare con attenzione</h4><p>Non sono vietati: possono funzionare, ma rischiano di coprire o confondere il gusto principale.</p><div class="friendlist">${caut.map(n=>friendRow(n,tasteFocus,1,{caution:true})).join('')}</div></div>`:''}${coldNotIdealBox()}</div>`;
+  const changeBtn=document.getElementById('tchangeingredient');if(changeBtn)changeBtn.onclick=()=>{clearTasteBuilder()};
+  out.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const n=b.dataset.add;addTasteItemToBuilder(tasteFocus);addTasteItemToBuilder(n);currentProfile=`Barattolo con ${tasteFocus}`;buildJar();applyTasteHints();renderTaste()});
+}
+buildJar();renderFind();initTasteLab();applyTasteHints();
 </script>
 </body>
 </html>
