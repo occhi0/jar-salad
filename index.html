@@ -311,22 +311,28 @@ function groupTasteResult(candidate,selected){
 }
 function allTasteItems(){return [...new Set([...Object.values(BD.cats).flat(),...Object.keys(BD.condimenti)])]}
 function tasteCategories(){
-  const sections=[];
-  Object.entries(BD.cats).forEach(([cat,items])=>{
-    const list=items.filter(n=>BD.ing[n]);
-    if(list.length)sections.push({cat,items:list});
-  });
+  // Raggruppamento solo visivo per la pagina "Abbinamenti di gusto":
+  // gli strati tecnici restano invariati nel builder e nel ricettario.
+  const groups=[
+    {cat:'Verdure e foglie',items:[...(BD.cats['Barriera — verdure resistenti']||[]),...(BD.cats['Verdure morbide']||[]),...(BD.cats['Foglie e germogli']||[])]},
+    {cat:'Legumi e amidacei',items:BD.cats['Legumi e amidacei']||[]},
+    {cat:'Cereali e patate',items:BD.cats['Cereali e patate']||[]},
+    {cat:'Frutta',items:BD.cats['Frutta']||[]},
+    {cat:'Proteine e formaggi',items:BD.cats['Proteine e formaggi']||[]},
+    {cat:'Erbe fresche',items:BD.cats['Erbe fresche']||[]},
+    {cat:'Croccante e topping',items:BD.cats['Croccante e topping']||[]}
+  ];
+  const sections=groups.map(g=>({cat:g.cat,items:[...new Set(g.items)].filter(n=>BD.ing[n])})).filter(s=>s.items.length);
   const cond=Object.keys(BD.condimenti);
   if(cond.length)sections.push({cat:'Condimento',items:cond});
   return sections;
 }
 function tasteGuideCategories(){
   const guide={
-    'Verdure':['Barbabietola','Carote','Cavolfiore','Cavolo cappuccio','Cetrioli a pezzi','Fagiolini','Finocchio','Funghi champignon','Melanzane grigliate','Peperoni','Sedano','Zucca','Zucchine crude a bastoncini','Zucchine crude spiralizzate','Zucchine grigliate','Asparagi (gambi)','Asparagi (punte)','Broccoli cotti','Spinaci cotti','Pomodori','Pomodorini'],
+    'Verdure e foglie':['Barbabietola','Carote','Cavolfiore','Cavolo cappuccio','Cetrioli a pezzi','Fagiolini','Finocchio','Funghi champignon','Melanzane grigliate','Peperoni','Sedano','Zucca','Zucchine crude a bastoncini','Zucchine crude spiralizzate','Zucchine grigliate','Asparagi (gambi)','Asparagi (punte)','Broccoli cotti','Spinaci cotti','Pomodori','Pomodorini','Radicchio','Rucola','Scarola','Spinaci freschi','Spinacino','Valeriana'],
     'Legumi e amidacei':['Ceci','Edamame','Fagioli cannellini','Fagioli di Spagna','Fagioli neri','Fagioli rossi','Lenticchie','Mais','Mix legumi','Piselli'],
     'Cereali e patate':['Bulgur','Cous cous','Farro','Grano saraceno','Orzo','Pasta corta','Pasta integrale','Patate lesse','Quinoa','Riso','Riso integrale','Riso rosso','Riso venere'],
-    'Proteine e formaggi':['Bresaola','Fesa di tacchino','Feta','Fiocchi di latte','Gamberetti','Grana padano','Mozzarella light','Parmigiano','Pecorino','Petto di pollo','Polpo','Primo sale','Prosciutto cotto','Ricotta salata','Salmone affumicato','Sgombro','Tofu','Tonno','Uova sode'],
-    'Foglie':['Radicchio','Rucola','Scarola','Spinaci freschi','Spinacino','Valeriana']
+    'Proteine e formaggi':['Bresaola','Fesa di tacchino','Feta','Fiocchi di latte','Gamberetti','Grana padano','Mozzarella light','Parmigiano','Pecorino','Petto di pollo','Polpo','Primo sale','Prosciutto cotto','Ricotta salata','Salmone affumicato','Sgombro','Tofu','Tonno','Uova sode']
   };
   return Object.entries(guide).map(([cat,items])=>({cat,items:items.filter(n=>BD.ing[n])})).filter(s=>s.items.length);
 }
