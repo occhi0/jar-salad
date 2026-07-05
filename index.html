@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Crea insalate in barattolo con il metodo a strati oppure trova una ricetta in base agli ingredienti disponibili.">
-<title>Barattolo — Crea o trova la tua insalata a strati</title>
+<meta name="description" content="Crea insalate in barattolo con metodo a strati filtrando ingredienti e ricette per esigenze alimentari.">
+<title>Insalate in barattolo — metodo a strati</title>
 <style>
 :root{
   --bg:#0e1512;--bg2:#141d19;--panel:#18231e;--panel2:#1e2b25;
@@ -116,6 +116,21 @@ h1 em{font-style:italic;color:var(--accent)}
 .scorepill{font-size:10.5px;color:var(--good);background:rgba(95,164,81,.13);border-radius:16px;padding:2px 7px;margin-left:4px}.caution .scorepill{color:var(--gold);background:rgba(240,200,90,.12)}.frienditem.alternative{border-style:dashed;border-color:rgba(240,200,90,.42)}.frienditem.alternative .scorepill{color:var(--gold);background:rgba(240,200,90,.12)}
 footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);font-size:12.5px}
 
+
+/* filtri alimentari */
+.dietbar{margin:18px 0 0;background:linear-gradient(180deg,rgba(240,200,90,.08),rgba(255,255,255,.015)),var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 14px}
+.dietbar h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 5px;font-weight:700}
+.dietintro{font-size:13px;color:var(--mut);margin:0 0 12px;max-width:90ch}
+.dietoptions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
+@media(max-width:820px){.dietoptions{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.dietoptions{grid-template-columns:1fr}}
+.dietcheck{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 11px;color:var(--ink);font-size:13px;cursor:pointer;min-height:42px}
+.dietcheck input{accent-color:var(--accent)}
+.dietcheck:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,112,58,.10)}
+.dietcheck:has(input:disabled){opacity:.72;cursor:default}
+.dietnote{font-size:12px;color:var(--mut2);margin:0}.dietnote b{color:var(--gold)}
+.chip.diet-hide{display:none!important}
+
 @media print{
   body.print-builder{background:#fff;color:#111}
   body.print-builder header,body.print-builder footer,body.print-builder .bpick,body.print-builder .tabs{display:none!important}
@@ -133,8 +148,8 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
 <div class="wrap">
 <header>
   <div class="jarmark">Insalate in barattolo · metodo a strati</div>
-  <h1>Il tuo <em>barattolo</em>, costruito con criterio</h1>
-  <p class="lede">Crea una combinazione nuova, esplora gli abbinamenti di gusto oppure consulta il ricettario completo. L’app distingue l’ordine tecnico degli strati dai suggerimenti di gusto, che restano facoltativi.</p>
+  <h1>Il tuo <em>barattolo</em> · costruito con criterio</h1>
+  <p class="lede">Crea insalate in barattolo con il metodo a strati. Puoi usare l’app liberamente con tutti gli ingredienti oppure attivare filtri alimentari per nascondere ciò che non è compatibile.</p>
   <div class="tabs" role="tablist" aria-label="Modalità dell'app">
     <button class="tab on" role="tab" aria-selected="true" data-view="build">Crea il tuo barattolo</button>
     <button class="tab" role="tab" aria-selected="false" data-view="taste">Abbinamenti di gusto</button>
@@ -142,11 +157,23 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   </div>
 </header>
 
+<section class="dietbar" aria-label="Filtri per esigenze alimentari">
+  <h2>Filtri alimentari</h2>
+  <p class="dietintro">Le spunte sono opzionali e combinabili: senza glutine e senza lattosio non eliminano carne o pesce, a meno che tu scelga anche vegetariano o vegano.</p>
+  <div class="dietoptions">
+    <label class="dietcheck"><input type="checkbox" id="diet-vegetarian"> Vegetariano</label>
+    <label class="dietcheck"><input type="checkbox" id="diet-vegan"> Vegano</label>
+    <label class="dietcheck"><input type="checkbox" id="diet-lactosefree"> Senza lattosio</label>
+    <label class="dietcheck"><input type="checkbox" id="diet-glutenfree"> Senza glutine</label>
+  </div>
+  <p class="dietnote" id="dietnote">Nessun filtro selezionato: sono disponibili tutti gli ingredienti. In caso di celiachia o intolleranze diagnosticate, verifica sempre etichette e contaminazioni.</p>
+</section>
+
 <section class="view on" id="view-build" role="tabpanel">
   <div class="bgrid">
     <section class="bpick">
       <h2>Scegli gli ingredienti</h2>
-      <p class="psub">Gli ingredienti vengono ordinati nei sette livelli. Per gli alimenti con più funzioni trovi varianti distinte, per esempio zucchine a bastoncini o spiralizzate.</p>
+      <p class="psub">Gli ingredienti vengono ordinati nei sette livelli. Le spunte alimentari sono facoltative e nascondono automaticamente ciò che non è compatibile.</p>
       <div class="optiongrid">
         <div class="field"><label for="eatwhen">Quando lo mangerai?</label><select class="bsel" id="eatwhen"><option value="today">Oggi</option><option value="tomorrow" selected>Domani</option><option value="twodays">Tra due giorni</option></select></div>
         <div class="field"><label for="jarsize">Formato del barattolo</label><select class="bsel" id="jarsize"><option value="500">500 ml</option><option value="750" selected>750 ml</option><option value="1000">1 litro</option></select></div>
@@ -169,7 +196,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   <div class="tastegrid">
     <aside class="tastepanel">
       <h2>Laboratorio abbinamenti</h2>
-      <p class="psub">Scegli un ingrediente guida: qui trovi solo gli ingredienti da cui ha senso partire. Condimenti, erbe e topping restano nel sistema, ma compaiono come suggerimenti negli abbinamenti.</p>
+      <p class="psub">Scegli un ingrediente guida compatibile con le tue spunte: anche gli abbinamenti vengono filtrati.</p>
       <input class="search" id="tsearch" placeholder="Cerca ingrediente guida…" autocomplete="off">
       <div id="tmainchips"></div>
       <div class="methodnote"><b>Nota:</b> questa lista serve a scegliere il protagonista del barattolo, non a costruirlo liberamente. Per aggiungere olio, limone, erbe, semi o altri elementi di supporto usa i suggerimenti a destra oppure la pagina Crea il tuo barattolo.</div>
@@ -182,7 +209,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   <div class="findgrid">
     <aside class="pantry">
       <h2>Ricettario · 60 ricette</h2>
-      <p class="psub">Seleziona ciò che hai in dispensa: le ricette saranno ordinate per fattibilità.</p>
+      <p class="psub">Seleziona ciò che hai in dispensa: le ricette incompatibili con le spunte sono già escluse.</p>
       <input class="search" id="search" placeholder="Cerca nella dispensa…" autocomplete="off">
       <div id="cats"></div>
       <div class="ptools"><button class="tbtn" id="clear">Svuota</button><button class="tbtn" id="sample">Esempio</button></div>
@@ -196,7 +223,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   </div>
 </section>
 
-<footer>Ricettario “Insalate in Barattolo” · metodo dei sette strati. App per uso personale. Quantità e calorie sono stime da verificare sulle porzioni effettive.</footer>
+<footer>Insalate in barattolo · metodo dei sette strati. App per uso personale. Quantità e calorie sono stime da verificare sulle porzioni effettive; per senza glutine e senza lattosio controlla sempre etichette e contaminazioni.</footer>
 </div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="sheet" id="sheet"></div></div>
@@ -216,6 +243,70 @@ const NORM={
 function keyOf(n){return NORM[n]||n}
 function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function setPressed(el,on){el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on))}
+
+// ---------- filtri alimentari combinabili ----------
+const DIET_MEAT_FISH=new Set(['Bresaola','Fesa di tacchino','Tacchino (fesa)','Petto di pollo','Pollo (petto)','Prosciutto cotto','Gamberetti','Polpo','Salmone affumicato','Sgombro','Tonno','Tonno al naturale']);
+const DIET_DAIRY=new Set(['Yogurt greco 0%','Feta','Fiocchi di latte','Grana padano','Mozzarella light','Parmigiano','Pecorino','Primo sale','Ricotta salata','Pesto genovese']);
+const DIET_EGGS=new Set(['Uova','Uova sode']);
+const DIET_ANIMAL=new Set([...DIET_MEAT_FISH,...DIET_DAIRY,...DIET_EGGS,'Miele']);
+const DIET_GLUTEN=new Set(['Farro','Orzo','Cous cous','Bulgur','Pasta','Pasta corta','Pasta integrale','Crostini','Granola salata','Salsa di soia']);
+function dietActive(){return{vegetarian:!!document.getElementById('diet-vegetarian')?.checked,vegan:!!document.getElementById('diet-vegan')?.checked,lactosefree:!!document.getElementById('diet-lactosefree')?.checked,glutenfree:!!document.getElementById('diet-glutenfree')?.checked}}
+function dietHasAny(){const d=dietActive();return d.vegetarian||d.vegan||d.lactosefree||d.glutenfree}
+function dietNames(n){const out=new Set();[n,keyOf(n),BKEY(n)].filter(Boolean).forEach(x=>{out.add(x);out.add(String(x).trim())});return out}
+function dietSetHas(set,n){for(const x of dietNames(n)){if(set.has(x))return true}return false}
+function isAllowedItem(n){
+  if(!n)return true;
+  const d=dietActive();
+  if(d.vegan){if(dietSetHas(DIET_ANIMAL,n))return false}
+  else if(d.vegetarian){if(dietSetHas(DIET_MEAT_FISH,n))return false}
+  if(d.lactosefree&&dietSetHas(DIET_DAIRY,n))return false;
+  if(d.glutenfree&&dietSetHas(DIET_GLUTEN,n))return false;
+  return true;
+}
+function recipeItemNames(r){return [...(r.keys||[]),...(r.strati||[]).flatMap(([n])=>[n,keyOf(n),BKEY(n)])].filter(Boolean)}
+function isRecipeAllowed(r){return recipeItemNames(r).every(isAllowedItem)}
+function allowedRecipes(){return DATA.ricette.filter(isRecipeAllowed)}
+function dietSummary(){
+  const d=dietActive(),parts=[];
+  if(d.vegan)parts.push('vegano'); else if(d.vegetarian)parts.push('vegetariano');
+  if(d.lactosefree)parts.push('senza lattosio');
+  if(d.glutenfree)parts.push('senza glutine');
+  return parts;
+}
+function syncDietControls(){
+  const veg=document.getElementById('diet-vegan'),veget=document.getElementById('diet-vegetarian');
+  if(veg&&veget){
+    if(veg.checked){if(!veget.checked)veget.dataset.forced='1';veget.checked=true;veget.disabled=true}
+    else{veget.disabled=false;if(veget.dataset.forced==='1'){veget.checked=false;delete veget.dataset.forced}}
+  }
+  const note=document.getElementById('dietnote'),parts=dietSummary();
+  if(note)note.innerHTML=parts.length?`Filtro attivo: <b>${esc(parts.join(' + '))}</b>. La lista mostra solo ingredienti e ricette compatibili. Per prodotti confezionati controlla sempre etichetta e possibili contaminazioni.`:'Nessun filtro selezionato: sono disponibili tutti gli ingredienti. In caso di celiachia o intolleranze diagnosticate, verifica sempre etichette e contaminazioni.';
+}
+function removeDisallowedFromSet(set){let changed=false;[...set].forEach(n=>{if(!isAllowedItem(n)){set.delete(n);changed=true}});return changed}
+function refreshDietVisibility(root){
+  if(!root)return;
+  root.querySelectorAll('.chip[data-k],.chip[data-taste]').forEach(ch=>{const n=ch.dataset.k||ch.dataset.taste;const blocked=!isAllowedItem(n);ch.classList.toggle('diet-hide',blocked);if(blocked)setPressed(ch,false)});
+}
+function firstAllowedTasteGuide(){const ch=[...document.querySelectorAll('#tmainchips .chip[data-taste]')].find(x=>!x.classList.contains('diet-hide'));return ch?ch.dataset.taste:null}
+function proteinExamples(){
+  const d=dietActive();
+  if(d.vegan)return 'Legumi e tofu sono le fonti principali disponibili con il filtro vegano.';
+  if(d.vegetarian)return d.lactosefree?'Legumi, tofu e uova sono le fonti principali disponibili.':'Legumi, tofu, uova e formaggi sono possibili fonti.';
+  if(d.lactosefree)return 'Legumi, tofu, uova, pesce e carne sono possibili fonti; i latticini vengono esclusi dal filtro.';
+  return 'Legumi, tofu, uova, pesce, carne e formaggi vengono tutti riconosciuti come possibili fonti.';
+}
+function applyDietFilters(){
+  syncDietControls();
+  removeDisallowedFromSet(pantry);removeDisallowedFromSet(picked);removeDisallowedFromSet(pickedCond);
+  refreshDietVisibility(catsEl);refreshDietVisibility(bcats);refreshDietVisibility(document.getElementById('tmainchips'));
+  catsEl?.querySelectorAll('.chip[data-k]').forEach(ch=>setPressed(ch,pantry.has(ch.dataset.k)));
+  bcats?.querySelectorAll('.chip[data-k]').forEach(ch=>setPressed(ch,picked.has(ch.dataset.k)||pickedCond.has(ch.dataset.k)));
+  if(tasteFocus&&!isAllowedItem(tasteFocus))tasteFocus=firstAllowedTasteGuide();
+  const s=document.getElementById('search');if(s)filterChips(catsEl,s.value);
+  const bs=document.getElementById('bsearch');if(bs)filterChips(bcats,bs.value);
+  applyTasteGuideFilter();
+  buildJar();renderFind();applyTasteHints();renderTaste();
+}
 
 // ---------- famiglie di gusto / abbinamenti ----------
 const HARMONY={
@@ -275,7 +366,7 @@ function recipeTokens(r){return new Set([...(r.keys||[]),...(r.strati||[]).map((
 function recipePair(a,b){
   const ka=BKEY(a),kb=BKEY(b);
   if(!ka||!kb||ka===kb)return false;
-  return DATA.ricette.some(r=>{const t=recipeTokens(r);return t.has(ka)&&t.has(kb)})
+  return allowedRecipes().some(r=>{const t=recipeTokens(r);return t.has(ka)&&t.has(kb)})
 }
 function directPair(a,b){return (PAIRINGS[a]||[]).includes(b)||(PAIRINGS[b]||[]).includes(a)||recipePair(a,b)}
 function tasteScore(a,b){return sharedFamilies(a,b).length*2+(directPair(a,b)?3:0)}
@@ -349,7 +440,7 @@ function groupTasteResult(candidate,selected){
   if(ratio>=0.6&&score>=3)return{level:'possible',score,compatible,total:ref.length};
   return{level:'dim',score,compatible,total:ref.length};
 }
-function allTasteItems(){return [...new Set([...Object.values(BD.cats).flat(),...Object.keys(BD.condimenti)])]}
+function allTasteItems(){return [...new Set([...Object.values(BD.cats).flat(),...Object.keys(BD.condimenti)])].filter(isAllowedItem)}
 function tasteCategories(){
   // Raggruppamento solo visivo per la pagina "Abbinamenti di gusto":
   // gli strati tecnici restano invariati nel builder e nel ricettario.
@@ -362,8 +453,8 @@ function tasteCategories(){
     {cat:'Erbe fresche',items:BD.cats['Erbe fresche']||[]},
     {cat:'Croccante e topping',items:BD.cats['Croccante e topping']||[]}
   ];
-  const sections=groups.map(g=>({cat:g.cat,items:[...new Set(g.items)].filter(n=>BD.ing[n])})).filter(s=>s.items.length);
-  const cond=Object.keys(BD.condimenti);
+  const sections=groups.map(g=>({cat:g.cat,items:[...new Set(g.items)].filter(n=>BD.ing[n]&&isAllowedItem(n))})).filter(s=>s.items.length);
+  const cond=Object.keys(BD.condimenti).filter(isAllowedItem);
   if(cond.length)sections.push({cat:'Condimento',items:cond});
   return sections;
 }
@@ -374,7 +465,7 @@ function tasteGuideCategories(){
     'Cereali e patate':['Bulgur','Cous cous','Farro','Grano saraceno','Orzo','Pasta corta','Pasta integrale','Patate lesse','Quinoa','Riso','Riso integrale','Riso rosso','Riso venere'],
     'Proteine e formaggi':['Bresaola','Fesa di tacchino','Feta','Fiocchi di latte','Gamberetti','Grana padano','Mozzarella light','Parmigiano','Pecorino','Petto di pollo','Polpo','Primo sale','Prosciutto cotto','Ricotta salata','Salmone affumicato','Sgombro','Tofu','Tonno','Uova sode']
   };
-  return Object.entries(guide).map(([cat,items])=>({cat,items:items.filter(n=>BD.ing[n])})).filter(s=>s.items.length);
+  return Object.entries(guide).map(([cat,items])=>({cat,items:items.filter(n=>BD.ing[n]&&isAllowedItem(n))})).filter(s=>s.items.length);
 }
 
 // ---------- tabs ----------
@@ -395,16 +486,16 @@ Object.entries(DATA.dispensa).forEach(([cat,items])=>{
 document.getElementById('search').addEventListener('input',e=>filterChips(document.getElementById('cats'),e.target.value));
 document.getElementById('clear').onclick=()=>{pantry.clear();catsEl.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));renderFind()};
 document.getElementById('sample').onclick=()=>{
-  const ex=['Pomodorini','Cetriolo','Zucchine','Carota','Rucola','Spinaci','Lattuga','Ceci','Fagioli','Tonno','Uova','Feta','Mais','Cipolla rossa','Pollo (petto)'];
+  const ex=['Pomodorini','Cetriolo','Zucchine','Carota','Rucola','Spinaci','Lattuga','Ceci','Fagioli','Tonno','Uova','Feta','Mais','Cipolla rossa','Pollo (petto)'].filter(isAllowedItem);
   pantry.clear();catsEl.querySelectorAll('.chip').forEach(c=>{const on=ex.includes(c.dataset.k);if(on)pantry.add(c.dataset.k);setPressed(c,on)});renderFind();
 };
-function filterChips(root,raw){const q=raw.trim().toLowerCase();root.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('hide',q&&!ch.textContent.toLowerCase().includes(q)));root.querySelectorAll('.catlabel').forEach(l=>{const box=l.nextElementSibling;const any=[...box.querySelectorAll('.chip')].some(c=>!c.classList.contains('hide'));l.style.display=any?'':'none';box.style.display=any?'':'none'})}
+function filterChips(root,raw){if(!root)return;const q=raw.trim().toLowerCase();root.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('hide',q&&!ch.textContent.toLowerCase().includes(q)));root.querySelectorAll('.catlabel').forEach(l=>{const box=l.nextElementSibling;const any=box&&[...box.querySelectorAll('.chip')].some(c=>!c.classList.contains('hide')&&!c.classList.contains('diet-hide'));l.style.display=any?'':'none';if(box)box.style.display=any?'':'none'})}
 const tipi=['Tutte',...[...new Set(DATA.ricette.map(r=>r.tipo))].sort()];
 const filtEl=document.getElementById('filters');tipi.forEach(t=>{const b=document.createElement('button');b.className='fbtn'+(t==='Tutte'?' on':'');b.textContent=t;b.setAttribute('aria-pressed',String(t==='Tutte'));b.onclick=()=>{filterTipo=t;[...filtEl.children].forEach(x=>setPressed(x,false));setPressed(b,true);renderFind()};filtEl.appendChild(b)});
 function evaluate(r,available){const have=r.keys.filter(k=>available.has(k));const miss=r.keys.filter(k=>!available.has(k));return{have,miss,total:r.keys.length,ready:miss.length===0}}
 function renderFind(){
-  document.getElementById('count').innerHTML=pantry.size?`Hai selezionato <b>${pantry.size}</b> ingredienti`:`Nessun ingrediente selezionato — mostro tutte le ricette`;
-  let list=DATA.ricette.map(r=>({r,e:evaluate(r,pantry)}));if(filterTipo!=='Tutte')list=list.filter(x=>x.r.tipo===filterTipo);
+  const active=dietSummary();document.getElementById('count').innerHTML=(pantry.size?`Hai selezionato <b>${pantry.size}</b> ingredienti`:`Nessun ingrediente selezionato — mostro tutte le ricette compatibili`)+(active.length?`<br><span>Filtro: ${esc(active.join(' + '))}</span>`:'');
+  let list=allowedRecipes().map(r=>({r,e:evaluate(r,pantry)}));if(filterTipo!=='Tutte')list=list.filter(x=>x.r.tipo===filterTipo);
   if(pantry.size)list.sort((a,b)=>a.e.miss.length-b.e.miss.length||b.e.have.length-a.e.have.length||a.r.nome.localeCompare(b.r.nome));else list.sort((a,b)=>a.r.id-b.r.id);
   const ready=list.filter(x=>x.e.ready&&pantry.size).length;document.getElementById('rtitle').textContent=pantry.size?`${ready} pronte subito · ${list.length} ricette`:`Le ${list.length} ricette`;
   renderTrim();const res=document.getElementById('results');if(!list.length){res.innerHTML='<div class="empty"><b>Nessuna ricetta</b> per questo filtro.</div>';return}
@@ -418,7 +509,7 @@ function renderFind(){
 }
 function renderTrim(){
   const el=document.getElementById('trim');if(pantry.size<4){el.innerHTML='';return}
-  const inplay=DATA.ricette.map(r=>({r,miss:r.keys.filter(k=>!pantry.has(k))})).filter(x=>x.miss.length<=1);
+  const inplay=allowedRecipes().map(r=>({r,miss:r.keys.filter(k=>!pantry.has(k))})).filter(x=>x.miss.length<=1);
   const info=[...pantry].map(k=>{const uses=inplay.filter(x=>x.r.keys.includes(k));return{k,count:uses.length,names:uses.map(x=>x.r.nome)}}).sort((a,b)=>a.count-b.count||a.k.localeCompare(b.k));
   if(!inplay.length){el.innerHTML='<div class="trim"><h3>Cosa puoi togliere dalla spesa</h3><p class="thint">Nessuna ricetta è ancora pronta o quasi pronta. Seleziona altri ingredienti per ricevere un confronto utile.</p></div>';return}
   const drops=info.filter(x=>x.count===0),rest=info.filter(x=>x.count>0);let rows='';
@@ -459,7 +550,7 @@ const PROFILES=[
  {name:'Pollo e mela',solid:['Sedano','Mela','Petto di pollo','Lattuga','Noci','Erba cipollina'],cond:['Yogurt greco 0%','Aceto di mele','Pepe nero']},
  {name:'Barbabietola e feta',solid:['Barbabietola','Feta','Mela','Spinacino','Noci'],cond:['Aceto balsamico','Olio EVO','Pepe nero']}
 ];
-document.getElementById('brandom').onclick=()=>{const p=PROFILES[Math.floor(Math.random()*PROFILES.length)];picked.clear();pickedCond.clear();bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));p.solid.filter(n=>BD.ing[n]).forEach(n=>picked.add(n));p.cond.filter(n=>BD.condimenti[n]).forEach(n=>pickedCond.add(n));[...picked,...pickedCond].forEach(n=>{const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,true)});currentProfile=p.name;buildJar();applyTasteHints()};
+document.getElementById('brandom').onclick=()=>{let pool=PROFILES.filter(p=>[...p.solid,...p.cond].every(isAllowedItem));if(!pool.length)pool=PROFILES.map(p=>({name:p.name+' filtrato',solid:p.solid.filter(isAllowedItem),cond:p.cond.filter(isAllowedItem)})).filter(p=>p.solid.length>=3);const p=pool[Math.floor(Math.random()*pool.length)];if(!p)return;picked.clear();pickedCond.clear();bcats.querySelectorAll('.chip.on').forEach(c=>setPressed(c,false));p.solid.filter(n=>BD.ing[n]&&isAllowedItem(n)).forEach(n=>picked.add(n));p.cond.filter(n=>BD.condimenti[n]&&isAllowedItem(n)).forEach(n=>pickedCond.add(n));[...picked,...pickedCond].forEach(n=>{const chip=bcats.querySelector(`.chip[data-k="${CSS.escape(n)}"]`);if(chip)setPressed(chip,true)});currentProfile=p.name;buildJar();applyTasteHints()};
 
 function has(n){return picked.has(n)}
 function defaultCondiment(){
@@ -487,7 +578,7 @@ function physicalGroups(byL,when){
 }
 function compositionAlerts(byL,when,size){
   const alerts=[];const solids=[...picked].map(n=>({n,info:BD.ing[n]}));const proteins=solids.filter(x=>x.info?.protein);const acids=[...pickedCond].filter(x=>['Aceto balsamico','Aceto di mele','Succo di limone','Succo di lime'].includes(x));const creams=[...pickedCond].filter(x=>['Yogurt greco 0%','Tahina','Pesto genovese','Senape'].includes(x));const saltyCount=solids.filter(x=>x.info?.salty).length+[...pickedCond].filter(x=>['Salsa di soia','Sale'].includes(x)).length;
-  if(solids.length&&!proteins.length)alerts.push({kind:'warn',txt:'Manca una <strong>fonte proteica</strong>. Legumi, tofu, uova, pesce, carne e formaggi vengono tutti riconosciuti come possibili fonti.'});
+  if(solids.length&&!proteins.length)alerts.push({kind:'warn',txt:'Manca una <strong>fonte proteica</strong>. '+proteinExamples()});
   if(solids.length&&!byL[6].length)alerts.push({kind:'info',txt:'Non hai scelto foglie o erbe in cima. Non è obbligatorio, ma aggiungono volume e freschezza.'});
   if(solids.length&&!byL[2].length&&!byL[3].length)alerts.push({kind:'warn',txt:'Manca una <strong>base solida</strong> che separi il condimento dagli ingredienti delicati.'});
   if(acids.length>1)alerts.push({kind:'warn',txt:`Hai selezionato più componenti acide (${acids.join(', ')}). Usale in quantità ridotte o scegline una.`});
@@ -515,7 +606,7 @@ function buildJar(){
   if(!byL[1].length&&picked.size){defaultCondiment().forEach(([n,q])=>byL[1].push({n,q,auto:true}));condAuto=true}
   const groups=physicalGroups(byL,when);const adaptedOrder=groups.some(g=>g.adapted);const jar=groups.slice().reverse().map(g=>`<div class="jarseg" style="background:${LAYER[g.l].c}">${g.l}</div>`).join('');
   const rows=groups.map((g,idx)=>{const inner=g.items.map(x=>`<span class="${x.auto?'auto':''}">${esc(x.n)}${x.q&&x.q!=='q.b.'?` <span style="color:var(--mut2)">· ${esc(x.q)}</span>`:''}${x.auto?' <span style="font-size:10px">(proposto)</span>':''}</span>`).join(', ');let note='';for(const x of g.items){if(BD.ing[x.n]?.nota){note=BD.ing[x.n].nota;break}}if(g.adapted)note=(note?note+' ':'')+'Ordine adattato alla preparazione anticipata.';return `<div class="brow"><div class="bnum" style="background:${LAYER[g.l].c}">${g.l}</div><div class="blayers"><div class="blname">${esc(LAYER[g.l].n)}<span class="stepflag">passaggio ${idx+1}</span>${g.adapted?'<span class="orderflag">ordine adattato</span>':''}</div><div class="bings">${inner}</div>${note?`<div class="bnote">${esc(note)}</div>`:''}</div></div>`}).join('');
-  const alerts=compositionAlerts(byL,when,size);const balance=balancePanel(byL);const pickedKeys=builderAvailable();const sims=DATA.ricette.map(r=>({r,shared:r.keys.filter(k=>pickedKeys.has(k)).length})).filter(x=>x.shared>=2).sort((a,b)=>b.shared-a.shared||a.r.id-b.r.id).slice(0,3);
+  const alerts=compositionAlerts(byL,when,size);const balance=balancePanel(byL);const pickedKeys=builderAvailable();const sims=allowedRecipes().map(r=>({r,shared:r.keys.filter(k=>pickedKeys.has(k)).length})).filter(x=>x.shared>=2).sort((a,b)=>b.shared-a.shared||a.r.id-b.r.id).slice(0,3);
   const simHtml=sims.length?`<div class="similar"><h4>Somiglia a queste del ricettario</h4>${sims.map(({r,shared})=>`<div class="simrow" data-id="${r.id}">${esc(r.nome)} <span style="color:var(--mut2)">— ${shared} ingredienti in comune</span></div>`).join('')}</div>`:'';
   const whenLabel={today:'oggi',tomorrow:'domani',twodays:'tra due giorni'}[when];
   out.innerHTML=`<div class="bcard"><div class="bcardhead"><div class="ctag">Il tuo barattolo</div><h3>${esc(currentProfile)}</h3><div class="bstats"><span><b>${picked.size}</b> ingredienti solidi</span><span><b>${groups.length}</b> passaggi</span><span><b>${size} ml</b></span><span>da mangiare <b>${whenLabel}</b></span></div></div><div class="bwrap"><div class="bjar"><div class="jarlid"></div><div class="jar">${jar}</div></div><div class="blayers">${rows}</div></div>${adaptedOrder?'<div class="balert info"><strong>Ordine adattato per la conservazione:</strong> il numero nel riquadro indica lo strato del metodo; la posizione nella lista indica il passaggio di montaggio. Per esempio, 1 → 3 → 2 significa condimento, ceci o cereali, poi cetriolo.</div>':''}${alerts.map(a=>`<div class="balert ${a.kind==='info'?'info':''}">⚠ ${a.txt}</div>`).join('')}${balance}${simHtml}<div class="bactions"><button class="baction" id="bcopy">Copia la ricetta</button><button class="baction ghost" id="bprint">Stampa</button></div></div>`;
@@ -539,7 +630,7 @@ function applyTasteHints(){
   if(!selected.length){if(hint)hint.textContent='I pallini colorati indicano famiglie di gusto, non regole fisse.';return}
   const selFamilies=[...new Set(selected.flatMap(itemFamilies))];let friends=0,possible=0,alternatives=0,conflicts=0;
   chips.forEach(ch=>{
-    const n=ch.dataset.k;if(selected.includes(n))return;
+    const n=ch.dataset.k;if(ch.classList.contains('diet-hide')||selected.includes(n))return;
     if(!itemFamilies(n).length)return;
     if(mode==='free'){
       if(selected.some(s=>sameIngredientVariant(n,s))){ch.classList.add('alternative');alternatives++;return}
@@ -616,11 +707,11 @@ function initTasteLab(){
     box.appendChild(group);
   });
   document.getElementById('tsearch').addEventListener('input',()=>{tasteGuideCollapsed=false;applyTasteGuideFilter()});
-  tasteFocus='Polpo';renderTaste();collapseTasteGuideList(tasteFocus);
+  tasteFocus=isAllowedItem('Polpo')?'Polpo':firstAllowedTasteGuide();renderTaste();if(tasteFocus)collapseTasteGuideList(tasteFocus);
 }
 
 function addTasteItemToBuilder(n){
-  if(!n)return false;
+  if(!n||!isAllowedItem(n))return false;
   let added=false;
   if(BD.ing[n]){
     if(!picked.has(n)){picked.add(n);added=true}
@@ -653,7 +744,7 @@ function friendRow(name,focus,score,opts={}){
   const shared=sharedFamilies(focus,name).map(f=>HARMONY[f].label);
   const baseWhy=directPair(focus,name)?'abbinamento specifico':(shared.length?`famiglia: ${shared.join(', ')}`:'contrasto da dosare');
   const pill=alternative?'alternativa':(inBuilder?'nel barattolo':(caution?'attenzione':score>=4?'molto bene':'bene'));
-  const addable=!alternative&&(BD.ing[name]||BD.condimenti[name]);
+  const addable=!alternative&&(BD.ing[name]||BD.condimenti[name])&&isAllowedItem(name);
   const btn=addable?`<button class="addtaste ${inBuilder?'added':''}" ${inBuilder?'disabled aria-pressed="true"':`data-add="${esc(name)}"`}>${inBuilder?'aggiunto':'aggiungi'}</button>`:'';
   const whyHtml=alternative?'':`<div class="friendwhy">${esc(baseWhy)}</div>`;
   return `<div class="frienditem ${caution?'caution':''} ${alternative?'alternative':''} ${inBuilder?'added':''}"><div><div class="friendname">${hdots(name)}${esc(name)} <span class="scorepill">${pill}</span></div>${whyHtml}</div>${btn}</div>`
@@ -680,18 +771,19 @@ function coldNotIdealBox(){
 }
 function renderTaste(){
   updateTasteLabSelection();
-  const out=document.getElementById('tasteout');if(!out)return;if(!tasteFocus){out.innerHTML='<div class="bempty"><b>Scegli un ingrediente guida.</b><br>Vedrai gli ingredienti compatibili per colore e famiglia.</div>';return}
+  const out=document.getElementById('tasteout');if(!out)return;if(tasteFocus&&!isAllowedItem(tasteFocus))tasteFocus=firstAllowedTasteGuide();if(!tasteFocus){out.innerHTML='<div class="bempty"><b>Scegli un ingrediente guida.</b><br>Vedrai gli ingredienti compatibili per colore e famiglia.</div>';return}
   const fams=itemFamilies(tasteFocus);const rankedRaw=allTasteItems().filter(n=>n!==tasteFocus).map(n=>({n,score:tasteScore(tasteFocus,n)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.n.localeCompare(b.n,'it'));
   const sameIngredientAlternatives=rankedRaw.filter(x=>sameIngredientVariant(tasteFocus,x.n)).slice(0,8);
   const ranked=dedupeTasteCandidates(rankedRaw,tasteFocus);
   const complementary=ranked.filter(x=>!sameFunctionalRole(tasteFocus,x.n));
   const alternatives=ranked.filter(x=>sameFunctionalRole(tasteFocus,x.n)).slice(0,8);
-  const strong=complementary.filter(x=>x.score>=4).slice(0,10),medium=complementary.filter(x=>x.score>0&&x.score<4).slice(0,10);const caut=(CAUTIONS[tasteFocus]||[]).filter(n=>BD.ing[n]||BD.condimenti[n]);
+  const strong=complementary.filter(x=>x.score>=4).slice(0,10),medium=complementary.filter(x=>x.score>0&&x.score<4).slice(0,10);const caut=(CAUTIONS[tasteFocus]||[]).filter(n=>(BD.ing[n]||BD.condimenti[n])&&isAllowedItem(n));
   out.innerHTML=`<div class="tastehero"><div class="tastehead"><div><div class="ctag">Ingrediente guida</div><h3>${hdots(tasteFocus)}${esc(tasteFocus)}</h3></div><button class="tchangebtn" id="tchangeingredient" type="button" title="Svuota il barattolo e riparti con un altro ingrediente guida">Cambia ingrediente</button></div><p>I colori indicano affinità di gusto. Quando aggiungi un abbinamento, nel barattolo viene inserito anche l’ingrediente guida. Gli elementi già aggiunti restano selezionati. Le proposte sono raggruppate per ruolo, come nella scelta ingredienti.</p><div class="legend">${fams.map(f=>`<span><i style="background:${HARMONY[f].color}"></i>${esc(HARMONY[f].label)}</span>`).join('')||'<span>Nessuna famiglia definita</span>'}</div></div><div class="tastecols"><div class="tastebox"><h4>Sta molto bene con</h4>${groupedFriendList(strong,tasteFocus,'Nessun abbinamento forte definito.')}</div><div class="tastebox"><h4>Sta bene / può completare</h4>${groupedFriendList(medium,tasteFocus,'Nessun abbinamento medio definito.')}</div>${sameIngredientAlternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ingrediente</h4><p>Sono varianti della stessa base: scegline una in base a consistenza, gusto e strato. Non vengono suggerite come aggiunta automatica per evitare doppioni poco utili.</p><div class="friendlist">${sameIngredientAlternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true,variant:true})).join('')}</div></div>`:''}${alternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ruolo</h4><p>Ruolo considerato: <strong>${esc(roleOf(tasteFocus))}</strong>. Non sono suggerite come aggiunta automatica: servono più come sostituzioni, così il barattolo non diventa “tutto proteine”, “tutto cereali” o “tutto topping”. Scegline una, oppure usale in piccola quantità solo con un’idea precisa.</p><div class="friendlist">${alternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true})).join('')}</div></div>`:''}${caut.length?`<div class="tastebox full caution"><h4>Da usare con attenzione</h4><p>Non sono vietati: possono funzionare, ma rischiano di coprire o confondere il gusto principale.</p><div class="friendlist">${caut.map(n=>friendRow(n,tasteFocus,1,{caution:true})).join('')}</div></div>`:''}${coldNotIdealBox()}</div>`;
   const changeBtn=document.getElementById('tchangeingredient');if(changeBtn)changeBtn.onclick=()=>{clearTasteBuilder()};
   out.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const n=b.dataset.add;addTasteItemToBuilder(tasteFocus);addTasteItemToBuilder(n);currentProfile=`Barattolo con ${tasteFocus}`;buildJar();applyTasteHints();renderTaste()});
 }
-buildJar();renderFind();initTasteLab();applyTasteHints();
+document.querySelectorAll('#diet-vegetarian,#diet-vegan,#diet-lactosefree,#diet-glutenfree').forEach(el=>el.addEventListener('change',applyDietFilters));
+buildJar();renderFind();initTasteLab();applyTasteHints();syncDietControls();refreshDietVisibility(catsEl);refreshDietVisibility(bcats);refreshDietVisibility(document.getElementById('tmainchips'));
 </script>
 </body>
 </html>
