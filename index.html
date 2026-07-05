@@ -254,6 +254,7 @@ const PAIRINGS={
   'Pera':['Pecorino','Parmigiano','Noci','Rucola','Radicchio','Aceto balsamico'],
   'Mela':['Sedano','Noci','Lattuga','Petto di pollo','Yogurt greco 0%','Aceto di mele'],
   'Ceci':['Peperoni','Pomodorini','Feta','Cetrioli a pezzi','Cipolla rossa','Succo di limone','Prezzemolo'],
+  'Cous cous':['Zucchine crude a bastoncini','Zucchine grigliate','Melanzane grigliate','Peperoni','Pomodorini','Basilico','Basilico tritato','Olive','Olio EVO','Sale','Ceci','Menta','Menta tritata'],
   'Rucola':['Bresaola','Parmigiano','Grana padano','Polpo','Patate lesse','Pomodorini','Pera','Noci']
 };
 const CAUTIONS={
@@ -270,7 +271,13 @@ function familyLabels(fams){return fams.map(f=>HARMONY[f]?.label).filter(Boolean
 function decorateChip(ch,name){const h=primaryFamily(name);if(!h)return;ch.dataset.harmony=itemFamilies(name)[0];ch.style.setProperty('--hcol',h.color);ch.title='Affinità: '+familyLabels(itemFamilies(name)).join(', ')}
 function hdots(name){return itemFamilies(name).map(f=>`<span class="hdots"><i style="background:${HARMONY[f].color}" title="${esc(HARMONY[f].label)}"></i></span>`).join('')}
 function sharedFamilies(a,b){const A=new Set(itemFamilies(a));return itemFamilies(b).filter(x=>A.has(x))}
-function directPair(a,b){return (PAIRINGS[a]||[]).includes(b)||(PAIRINGS[b]||[]).includes(a)}
+function recipeTokens(r){return new Set([...(r.keys||[]),...(r.strati||[]).map(([n])=>BKEY(keyOf(n)))].filter(Boolean))}
+function recipePair(a,b){
+  const ka=BKEY(a),kb=BKEY(b);
+  if(!ka||!kb||ka===kb)return false;
+  return DATA.ricette.some(r=>{const t=recipeTokens(r);return t.has(ka)&&t.has(kb)})
+}
+function directPair(a,b){return (PAIRINGS[a]||[]).includes(b)||(PAIRINGS[b]||[]).includes(a)||recipePair(a,b)}
 function tasteScore(a,b){return sharedFamilies(a,b).length*2+(directPair(a,b)?3:0)}
 function tasteConflict(a,b){return (CAUTIONS[a]||[]).includes(b)||(CAUTIONS[b]||[]).includes(a)}
 function roleOf(name){
