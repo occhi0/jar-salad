@@ -280,6 +280,38 @@ function recipePair(a,b){
 function directPair(a,b){return (PAIRINGS[a]||[]).includes(b)||(PAIRINGS[b]||[]).includes(a)||recipePair(a,b)}
 function tasteScore(a,b){return sharedFamilies(a,b).length*2+(directPair(a,b)?3:0)}
 function tasteConflict(a,b){return (CAUTIONS[a]||[]).includes(b)||(CAUTIONS[b]||[]).includes(a)}
+const INGREDIENT_VARIANT_BASE={
+  'Broccoli crudi':'Broccoli','Broccoli cotti':'Broccoli',
+  'Zucchine crude a bastoncini':'Zucchine','Zucchine crude spiralizzate':'Zucchine','Zucchine grigliate':'Zucchine',
+  'Spinaci freschi':'Spinaci','Spinaci cotti':'Spinaci','Spinacino':'Spinaci',
+  'Pomodori':'Pomodori','Pomodorini':'Pomodori','Pomodori secchi':'Pomodori','Pomodorini secchi':'Pomodori',
+  'Riso':'Riso','Riso integrale':'Riso','Riso rosso':'Riso','Riso venere':'Riso',
+  'Pasta corta':'Pasta','Pasta integrale':'Pasta',
+  'Fagioli cannellini':'Fagioli','Fagioli rossi':'Fagioli','Fagioli neri':'Fagioli','Fagioli di Spagna':'Fagioli',
+  'Cetrioli a pezzi':'Cetriolo','Cetriolini sottaceto':'Cetriolo',
+  'Asparagi (gambi)':'Asparagi','Asparagi (punte)':'Asparagi',
+  'Basilico':'Basilico','Basilico tritato':'Basilico',
+  'Menta':'Menta','Menta tritata':'Menta',
+  'Prezzemolo':'Prezzemolo','Prezzemolo tritato':'Prezzemolo',
+  'Aneto':'Aneto','Aneto tritato':'Aneto',
+  'Coriandolo':'Coriandolo','Coriandolo tritato':'Coriandolo',
+  'Erba cipollina':'Erba cipollina','Erba cipollina tritata':'Erba cipollina'
+};
+function ingredientBase(name){return INGREDIENT_VARIANT_BASE[name]||BKEY(name)||keyOf(name)||name}
+function sameIngredientVariant(a,b){
+  if(!a||!b||a===b)return false;
+  const ba=ingredientBase(a),bb=ingredientBase(b);
+  return ba&&bb&&ba===bb;
+}
+function dedupeTasteCandidates(items,focus){
+  const seen=new Set(),out=[];
+  items.forEach(x=>{
+    const base=ingredientBase(x.n);
+    if(sameIngredientVariant(focus,x.n))return;
+    if(!seen.has(base)){seen.add(base);out.push(x)}
+  });
+  return out;
+}
 function roleOf(name){
   if(BD.condimenti[name])return 'condimento';
   const info=BD.ing[name];if(!info)return 'altro';
@@ -304,7 +336,8 @@ function groupTasteResult(candidate,selected){
   if(!ref.length)return{level:'neutral',score:0,compatible:0,total:0};
   let score=0,compatible=0,conflict=false,roleMate=null;
   ref.forEach(s=>{
-    if(sameFunctionalRole(candidate,s))roleMate=s;
+    if(sameIngredientVariant(candidate,s))roleMate=s;
+    else if(sameFunctionalRole(candidate,s))roleMate=s;
     if(tasteConflict(s,candidate)){conflict=true;score-=3;return}
     const sc=tasteScore(s,candidate);
     if(sc>0){compatible++;score+=sc}
@@ -509,6 +542,7 @@ function applyTasteHints(){
     const n=ch.dataset.k;if(selected.includes(n))return;
     if(!itemFamilies(n).length)return;
     if(mode==='free'){
+      if(selected.some(s=>sameIngredientVariant(n,s))){ch.classList.add('alternative');alternatives++;return}
       const score=selected.reduce((m,s)=>Math.max(m,tasteScore(s,n)),0);
       const shares=itemFamilies(n).some(f=>selFamilies.includes(f));
       if(score>=2||shares){ch.classList.add('friend');friends++}else{ch.classList.add('dim')}
@@ -524,7 +558,7 @@ function applyTasteHints(){
   const labels=familyLabels(selFamilies).slice(0,3).join(', ');
   if(hint){
     if(mode==='free')hint.innerHTML=`Modalità libera: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Si illuminano gli ingredienti compatibili con almeno una scelta. Suggerimento, non regola.`;
-    else hint.innerHTML=`Modalità gruppo: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Ben accesi ${friends} ingredienti che completano tutto il gruppo; ${possible} possibili; ${alternatives} alternative dello stesso ruolo. Gli spenti restano cliccabili.`;
+    else hint.innerHTML=`Modalità gruppo: <b>${esc(labels||'nessuna famiglia prevalente')}</b>. Ben accesi ${friends} ingredienti che completano tutto il gruppo; ${possible} possibili; ${alternatives} alternative dello stesso ruolo o dello stesso ingrediente. Gli spenti restano cliccabili.`;
   }
 }
 let tasteGuideCollapsed=false;
@@ -647,11 +681,13 @@ function coldNotIdealBox(){
 function renderTaste(){
   updateTasteLabSelection();
   const out=document.getElementById('tasteout');if(!out)return;if(!tasteFocus){out.innerHTML='<div class="bempty"><b>Scegli un ingrediente guida.</b><br>Vedrai gli ingredienti compatibili per colore e famiglia.</div>';return}
-  const fams=itemFamilies(tasteFocus);const ranked=allTasteItems().filter(n=>n!==tasteFocus).map(n=>({n,score:tasteScore(tasteFocus,n)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.n.localeCompare(b.n,'it'));
+  const fams=itemFamilies(tasteFocus);const rankedRaw=allTasteItems().filter(n=>n!==tasteFocus).map(n=>({n,score:tasteScore(tasteFocus,n)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.n.localeCompare(b.n,'it'));
+  const sameIngredientAlternatives=rankedRaw.filter(x=>sameIngredientVariant(tasteFocus,x.n)).slice(0,8);
+  const ranked=dedupeTasteCandidates(rankedRaw,tasteFocus);
   const complementary=ranked.filter(x=>!sameFunctionalRole(tasteFocus,x.n));
   const alternatives=ranked.filter(x=>sameFunctionalRole(tasteFocus,x.n)).slice(0,8);
   const strong=complementary.filter(x=>x.score>=4).slice(0,10),medium=complementary.filter(x=>x.score>0&&x.score<4).slice(0,10);const caut=(CAUTIONS[tasteFocus]||[]).filter(n=>BD.ing[n]||BD.condimenti[n]);
-  out.innerHTML=`<div class="tastehero"><div class="tastehead"><div><div class="ctag">Ingrediente guida</div><h3>${hdots(tasteFocus)}${esc(tasteFocus)}</h3></div><button class="tchangebtn" id="tchangeingredient" type="button" title="Svuota il barattolo e riparti con un altro ingrediente guida">Cambia ingrediente</button></div><p>I colori indicano affinità di gusto. Quando aggiungi un abbinamento, nel barattolo viene inserito anche l’ingrediente guida. Gli elementi già aggiunti restano selezionati. Le proposte sono raggruppate per ruolo, come nella scelta ingredienti.</p><div class="legend">${fams.map(f=>`<span><i style="background:${HARMONY[f].color}"></i>${esc(HARMONY[f].label)}</span>`).join('')||'<span>Nessuna famiglia definita</span>'}</div></div><div class="tastecols"><div class="tastebox"><h4>Sta molto bene con</h4>${groupedFriendList(strong,tasteFocus,'Nessun abbinamento forte definito.')}</div><div class="tastebox"><h4>Sta bene / può completare</h4>${groupedFriendList(medium,tasteFocus,'Nessun abbinamento medio definito.')}</div>${alternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ruolo</h4><p>Ruolo considerato: <strong>${esc(roleOf(tasteFocus))}</strong>. Non sono suggerite come aggiunta automatica: servono più come sostituzioni, così il barattolo non diventa “tutto proteine”, “tutto cereali” o “tutto topping”. Scegline una, oppure usale in piccola quantità solo con un’idea precisa.</p><div class="friendlist">${alternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true})).join('')}</div></div>`:''}${caut.length?`<div class="tastebox full caution"><h4>Da usare con attenzione</h4><p>Non sono vietati: possono funzionare, ma rischiano di coprire o confondere il gusto principale.</p><div class="friendlist">${caut.map(n=>friendRow(n,tasteFocus,1,{caution:true})).join('')}</div></div>`:''}${coldNotIdealBox()}</div>`;
+  out.innerHTML=`<div class="tastehero"><div class="tastehead"><div><div class="ctag">Ingrediente guida</div><h3>${hdots(tasteFocus)}${esc(tasteFocus)}</h3></div><button class="tchangebtn" id="tchangeingredient" type="button" title="Svuota il barattolo e riparti con un altro ingrediente guida">Cambia ingrediente</button></div><p>I colori indicano affinità di gusto. Quando aggiungi un abbinamento, nel barattolo viene inserito anche l’ingrediente guida. Gli elementi già aggiunti restano selezionati. Le proposte sono raggruppate per ruolo, come nella scelta ingredienti.</p><div class="legend">${fams.map(f=>`<span><i style="background:${HARMONY[f].color}"></i>${esc(HARMONY[f].label)}</span>`).join('')||'<span>Nessuna famiglia definita</span>'}</div></div><div class="tastecols"><div class="tastebox"><h4>Sta molto bene con</h4>${groupedFriendList(strong,tasteFocus,'Nessun abbinamento forte definito.')}</div><div class="tastebox"><h4>Sta bene / può completare</h4>${groupedFriendList(medium,tasteFocus,'Nessun abbinamento medio definito.')}</div>${sameIngredientAlternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ingrediente</h4><p>Sono varianti della stessa base: scegline una in base a consistenza, gusto e strato. Non vengono suggerite come aggiunta automatica per evitare doppioni poco utili.</p><div class="friendlist">${sameIngredientAlternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true,variant:true})).join('')}</div></div>`:''}${alternatives.length?`<div class="tastebox full alternative"><h4>Alternative dello stesso ruolo</h4><p>Ruolo considerato: <strong>${esc(roleOf(tasteFocus))}</strong>. Non sono suggerite come aggiunta automatica: servono più come sostituzioni, così il barattolo non diventa “tutto proteine”, “tutto cereali” o “tutto topping”. Scegline una, oppure usale in piccola quantità solo con un’idea precisa.</p><div class="friendlist">${alternatives.map(x=>friendRow(x.n,tasteFocus,x.score,{alternative:true})).join('')}</div></div>`:''}${caut.length?`<div class="tastebox full caution"><h4>Da usare con attenzione</h4><p>Non sono vietati: possono funzionare, ma rischiano di coprire o confondere il gusto principale.</p><div class="friendlist">${caut.map(n=>friendRow(n,tasteFocus,1,{caution:true})).join('')}</div></div>`:''}${coldNotIdealBox()}</div>`;
   const changeBtn=document.getElementById('tchangeingredient');if(changeBtn)changeBtn.onclick=()=>{clearTasteBuilder()};
   out.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const n=b.dataset.add;addTasteItemToBuilder(tasteFocus);addTasteItemToBuilder(n);currentProfile=`Barattolo con ${tasteFocus}`;buildJar();applyTasteHints();renderTaste()});
 }
