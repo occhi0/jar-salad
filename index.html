@@ -118,12 +118,17 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
 
 
 /* filtri alimentari */
-.dietbar{margin:18px 0 0;background:linear-gradient(180deg,rgba(240,200,90,.08),rgba(255,255,255,.015)),var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 14px}
-.dietbar h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 5px;font-weight:700}
+.dietbar{margin:18px 0 0;background:linear-gradient(180deg,rgba(240,200,90,.08),rgba(255,255,255,.015)),var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:0;overflow:hidden}
+.diettoggle{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:13px 16px;color:var(--gold);font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.diettoggle::-webkit-details-marker{display:none}
+.diettoggle::after{content:'▾';color:var(--gold);font-size:14px;transition:transform .15s ease;line-height:1}
+.dietbar[open] .diettoggle::after{transform:rotate(180deg)}
+.diettoggle span{white-space:nowrap}.diettoggle small{margin-left:auto;color:var(--mut);font-size:12px;letter-spacing:0;text-transform:none;font-weight:500;text-align:right;line-height:1.25}
+.dietinner{padding:0 16px 14px}
 .dietintro{font-size:13px;color:var(--mut);margin:0 0 12px;max-width:90ch}
 .dietoptions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
 @media(max-width:820px){.dietoptions{grid-template-columns:1fr 1fr}}
-@media(max-width:460px){.dietoptions{grid-template-columns:1fr}}
+@media(max-width:460px){.diettoggle{align-items:flex-start}.diettoggle small{max-width:46%;font-size:11.5px}.dietoptions{grid-template-columns:1fr}}
 .dietcheck{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 11px;color:var(--ink);font-size:13px;cursor:pointer;min-height:42px}
 .dietcheck input{accent-color:var(--accent)}
 .dietcheck:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,112,58,.10)}
@@ -157,17 +162,19 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--mut2);fo
   </div>
 </header>
 
-<section class="dietbar" aria-label="Filtri per esigenze alimentari">
-  <h2>Filtri alimentari</h2>
-  <p class="dietintro">Le spunte sono opzionali e combinabili: senza glutine e senza lattosio non eliminano carne o pesce, a meno che tu scelga anche vegetariano o vegano.</p>
-  <div class="dietoptions">
-    <label class="dietcheck"><input type="checkbox" id="diet-vegetarian"> Vegetariano</label>
-    <label class="dietcheck"><input type="checkbox" id="diet-vegan"> Vegano</label>
-    <label class="dietcheck"><input type="checkbox" id="diet-lactosefree"> Senza lattosio</label>
-    <label class="dietcheck"><input type="checkbox" id="diet-glutenfree"> Senza glutine</label>
+<details class="dietbar" id="dietbar" aria-label="Filtri per esigenze alimentari">
+  <summary class="diettoggle"><span>Filtri alimentari</span><small id="dietsummarylabel">Tutti gli ingredienti</small></summary>
+  <div class="dietinner">
+    <p class="dietintro">Le spunte sono opzionali e combinabili: senza glutine e senza lattosio non eliminano carne o pesce, a meno che tu scelga anche vegetariano o vegano.</p>
+    <div class="dietoptions">
+      <label class="dietcheck"><input type="checkbox" id="diet-vegetarian"> Vegetariano</label>
+      <label class="dietcheck"><input type="checkbox" id="diet-vegan"> Vegano</label>
+      <label class="dietcheck"><input type="checkbox" id="diet-lactosefree"> Senza lattosio</label>
+      <label class="dietcheck"><input type="checkbox" id="diet-glutenfree"> Senza glutine</label>
+    </div>
+    <p class="dietnote" id="dietnote">Nessun filtro selezionato: sono disponibili tutti gli ingredienti. In caso di celiachia o intolleranze diagnosticate, verifica sempre etichette e contaminazioni.</p>
   </div>
-  <p class="dietnote" id="dietnote">Nessun filtro selezionato: sono disponibili tutti gli ingredienti. In caso di celiachia o intolleranze diagnosticate, verifica sempre etichette e contaminazioni.</p>
-</section>
+</details>
 
 <section class="view on" id="view-build" role="tabpanel">
   <div class="bgrid">
@@ -280,6 +287,8 @@ function syncDietControls(){
     else{veget.disabled=false;if(veget.dataset.forced==='1'){veget.checked=false;delete veget.dataset.forced}}
   }
   const note=document.getElementById('dietnote'),parts=dietSummary();
+  const summary=document.getElementById('dietsummarylabel');
+  if(summary)summary.textContent=parts.length?parts.join(' + '):'Tutti gli ingredienti';
   if(note)note.innerHTML=parts.length?`Filtro attivo: <b>${esc(parts.join(' + '))}</b>. La lista mostra solo ingredienti e ricette compatibili. Per prodotti confezionati controlla sempre etichetta e possibili contaminazioni.`:'Nessun filtro selezionato: sono disponibili tutti gli ingredienti. In caso di celiachia o intolleranze diagnosticate, verifica sempre etichette e contaminazioni.';
 }
 function removeDisallowedFromSet(set){let changed=false;[...set].forEach(n=>{if(!isAllowedItem(n)){set.delete(n);changed=true}});return changed}
